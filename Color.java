@@ -33,7 +33,7 @@ public enum Color {
         return code;
     }
 
-    public String colorize(boolean enabled, String s, Color c) {
+    public static String colorize(boolean enabled, String s, Color c) {
 	if(!enabled)
 	    return s;
 	
