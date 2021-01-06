@@ -1,7 +1,8 @@
 public class Timer {
+    private final String timer_disabled = "timer disabled";
     //TODO: get rid of this main function later
     public static void main(String[] argv) {
-	Timer t = new Timer();
+	Timer t = new Timer(true);
 
 	for(int i = 0; i < 100000; i++) {
 	    int a = i * i * i;
@@ -18,6 +19,7 @@ public class Timer {
     private long split = -1;
     private long timeSpent = 0;    
     private boolean enabled = true;
+
     public Timer(boolean enabled) {
 	initTime = split = System.nanoTime();
 	this.enabled = enabled;
@@ -37,7 +39,7 @@ public class Timer {
      */
     public String split(String message) {
 	if(!enabled)
-	    return null;
+	    return timer_disabled;
 	
 	long newTime = System.nanoTime();
 	//get the split
@@ -55,6 +57,37 @@ public class Timer {
 	return res;
     }
 
+    /**
+     * Determines the total amount of time that has passed since the last split.
+     * <p>
+     * Determines the total amount of time that has passed since the last split.
+     * Time that has been spent within the timer has been factored out.
+     * The time is formatted based on the input string
+     *
+     * @param message the name of the event
+     * @return A format string representing the event and the total time passed since the last split.
+     * @since 1.0
+     */
+    public String splitf(String message) {
+	if(!enabled)
+	    return timer_disabled;
+	
+	long newTime = System.nanoTime();
+	//get the split
+	long splitTime = newTime - split;
+
+	//convert that into something human readable
+	double seconds = splitTime / nano_to_seconds;
+
+	String res = String.format(message, seconds);
+
+	//make up for the string format time
+	timeSpent += splitTime;
+	split = System.nanoTime();
+	
+	return res;
+    }
+    
 
     /**
      * Determines the total amount of time that has passed since the last split.
@@ -67,7 +100,7 @@ public class Timer {
      */
     public String split() {
 	if(!enabled)
-	    return null;
+	    return timer_disabled;
 	
 	long newTime = System.nanoTime();
 	//get the split
@@ -96,7 +129,7 @@ public class Timer {
      */
     public String total() {
 	if(!enabled)
-	    return null;
+	    return timer_disabled;
 	
 	//we want the time between now and the last split
 	long currentTime = System.nanoTime();	
