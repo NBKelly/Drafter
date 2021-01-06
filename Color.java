@@ -32,4 +32,14 @@ public enum Color {
     @Override public String toString() {
         return code;
     }
+
+    public String colorize(boolean enabled, String s, Color c) {
+	if(!enabled)
+	    return s;
+	
+	if(c == RESET)
+	    return s;
+
+	return String.format("%s%s%s", c.toString(), s, RESET.toString());
+    }
 }
