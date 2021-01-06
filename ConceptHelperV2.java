@@ -1,5 +1,19 @@
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
+/*
+ * print(x)
+ * printf(x, args)
+ * println(x)
+ * 
+ * DEBUG(level, x)
+ * DEBUG(x) -> DEBUG(1, x)
+ * DEBUGF(level, x, args) -> DEBUG(level, f(x, args))
+ * DEBUG() -> DEBUG("")
+ */
 public /*abstract*/ class ConceptHelperV2 {
     /** Does this session support/enable color? */
     private boolean _COLOR_ENABLED = false;
@@ -21,6 +35,27 @@ public /*abstract*/ class ConceptHelperV2 {
     /** debug level */
     protected int _DEBUG_LEVEL = 0;
     protected boolean _DEBUG = false; //true if _DEBUG_LEVEL > 0
+
+    /** read input */
+    private int LINE = 0;
+    private int TOKEN = 0;
+    private Scanner _line = null;
+    private Scanner _input = null;
+    private String _currentLine = null;
+    private ArrayList<String> _paged = new ArrayList<String>();
+    private boolean _NEXT_GREEDY = true;
+    
+    /*
+     * for reference:
+     *   LINE   -> line number
+     *   TOKEN  -> token number
+     *   _line  -> line scanner
+     *   _input -> input scanner
+     *   _paged -> paged input lines
+     *   _currentLine - > current line
+     *   _PAGE_ENABLED : page mode enabled
+     *   _NEXT_GREEDY  : next churns through lines
+     */
     
     /** performs check-once analysis to enable colors */
     private boolean _COLOR_ENABLED() {
@@ -50,6 +85,7 @@ public /*abstract*/ class ConceptHelperV2 {
     }
 
     protected void solveProblem() {
+	Timer t = new Timer(_DEBUG_LEVEL > 0);
 	println("Normal line");
 	print("A");
 	print("B");
@@ -64,12 +100,27 @@ public /*abstract*/ class ConceptHelperV2 {
 	DEBUG(4, "DEBUG LEVEL 4");
 	DEBUG(5, "DEBUG LEVEL 5");
 	DEBUG(6, "DEBUG LEVEL 6");
+
+	println(t.splitf("Solve Time: %fs"));
+	
+	//println("Has Next: " + hasNext());
+	println("First Line: " + nextLine());
+	println("Has Next: " + hasNext());
+	println(next());
+	println(next());
+	while(hasNextLine())
+	    println(nextLine());
+
+	println("Here's the results of our page:");
+	for(String s: _paged)
+	    printf("paged : '%s'%n", s);
     }
 
 
 
     public ConceptHelperV2() {
 	self = this;
+	_input = new Scanner(System.in);
     }
     
     
@@ -313,7 +364,280 @@ public /*abstract*/ class ConceptHelperV2 {
 	return Arrays.copyOfRange(arr, cutAt, arr.length);
     }
 
+    /*********************************************************
+     *
+     *                     INPUT COMMANDS
+     *
+     *********************************************************/
+    /*
+     * for reference:
+     *   LINE   -> line number
+     *   TOKEN  -> token number
+     *   _line  -> line scanner
+     *   _input -> input scanner
+     *   _paged -> paged input lines
+     *   _currentLine - > current line
+     *   _PAGE_ENABLED
+     *
+     *   Note that, on initiation, _input will be set to the system scanner
+     *
+     *   implemented:
+     *     currentLine() - > gets the whole current line
+     *     isEmptyLine() - > checks the current line exists and has size 0
+     *     hasNextLine() - > checks that another line exists
+     *     nextLine()    - > returns the remainder of the current line, and cycles to the next one
+     *     hasNext()     - > is there another token on this line
+     *     next()        - > return the next token on this line
+     *
+     *     hasNextInt()         - > Is the next token on this line (if it exists) an integer 
+     *     nextInt()            - > Returns the next integer on this line, or null
+     *     
+     *     hasNextDouble()      - > Is the next token on this line (if it exists) a double 
+     *     nextDouble()         - > Returns the next double on this line, or null
+     *     
+     *     hasNextLong()        - > Is the next token on this line (if it exists) a long 
+     *     nextLong()           - > Returns the next long on this line, or null
+     *     
+     *     hasNextBigInteger()  - > Is the next token on this line (if it exists) a BigInteger 
+     *     nextBigInteger()     - > Returns the next BigInteger on this line, or null
+     *     
+     *     hasNextBigDecimal()  - > Is the next token on this line (if it exists) a BigDecimal 
+     *     nextBigDecimal()     - > Returns the next BigDecimal on this line, or null
+     *     
+     *     lineNumber()  - > return the current line number
+     *     tokenNumber() - > return the current token number
+     *     getPage(line) - > returns the paged value from line if possible, otherwise null
+     */    
+    public int lineNumber() {
+	return LINE;
+    }
 
+    public int tokenNumber() {
+	return TOKEN;
+    }
+
+    public String getPage(int number) throws IllegalArgumentException {
+	if(!_PAGE_ENABLED)
+	    return null;
+
+	//get the thing at this number
+	if(number < 0)
+	    throw new IllegalArgumentException("Attempted to page a negative index");
+
+	if(_paged.size() >= number)
+	    return null;
+
+	return _paged.get(number);
+    }
+    
+    public boolean isEmptyLine() {
+	return currentLine() != null && currentLine().length() == 0;
+    }
+    
+    public String currentLine() {
+	return _currentLine;
+    }
+
+    ///////////// NEXTBIGINTEGER
+
+    public BigInteger nextBigInteger() {
+        if(hasNextBigInteger()) {
+            TOKEN++;
+            return _line.nextBigInteger();
+        }
+	
+        return null;
+    }
+    
+    public boolean hasNextBigInteger() {
+        if(_line != null) {
+            return (_line.hasNextBigInteger());
+        }
+        if (!checkNextLine())
+            return false;
+        if(_line != null)
+            return (_line.hasNextBigInteger());
+        return false;
+    }
+    
+    ///////////// NEXTBIGDECIMAL
+
+    public BigDecimal nextBigDecimal() {
+        if(hasNextBigDecimal()) {
+            TOKEN++;
+            return _line.nextBigDecimal();
+        }
+	
+        return null;
+    }
+    
+    public boolean hasNextBigDecimal() {
+        if(_line != null) {
+            return (_line.hasNextBigDecimal());
+        }
+        if (!checkNextLine())
+            return false;
+        if(_line != null)
+            return (_line.hasNextBigDecimal());
+        return false;
+    }
+    
+    ///////////// NEXTDOUBLE
+
+    public Double nextDouble() {
+        if(hasNextDouble()) {
+            TOKEN++;
+            return _line.nextDouble();
+        }
+
+        return null;
+    }
+
+    public boolean hasNextDouble() {
+        if(_line != null) {
+            return (_line.hasNextDouble());
+        }
+        if (!checkNextLine())
+            return false;
+        if(_line != null)
+            return (_line.hasNextDouble());
+        return false;
+    }
+    
+    ///////////// NEXTLONG
+    
+    public Long nextLong() {
+        if(hasNextLong()) {
+            TOKEN++;
+            return _line.nextLong();
+        }
+
+        return null;
+    }
+
+    public boolean hasNextLong() {
+        if(_line != null) {
+            return (_line.hasNextLong());
+        }
+        if (!checkNextLine())
+            return false;
+        if(_line != null)
+            return (_line.hasNextLong());
+        return false;
+    }
+    
+    ///////////// NEXTINT
+    
+    public Integer nextInt() {
+	if(hasNextInt()) {
+	    TOKEN++;
+	    return _line.nextInt();
+	}
+
+	return null;
+    }
+    
+    public boolean hasNextInt() {
+	if(_line != null) {
+	    return (_line.hasNextInt());
+	}
+	if (!checkNextLine())
+	    return false;
+	if(_line != null)
+	    return (_line.hasNextInt());
+	return false;
+    }
+
+    //////////// NEXT
+    
+    public String next() {
+	if(hasNext()) {
+	    TOKEN++;
+	    return _line.next();
+	}
+
+	return null;
+    }
+    
+    private boolean hasNext() {
+	if(_line != null) {
+	    return (_line.hasNext());
+	}
+	if (!checkNextLine())
+	    return false;
+	if(_line != null)
+	    return (_line.hasNext());
+	return false;
+    }
+
+    //////////// NEXTLINE
+    
+    public String nextLine() {
+	if(hasNextLine()) {
+	    //if there's something left on the input
+	    if(_line.hasNext()) {
+		String res = _line.nextLine();
+		if(hasNextLine()) {
+		    _currentLine = _input.nextLine();
+		    if(_PAGE_ENABLED)
+			_paged.add(_currentLine);
+		    _line = new Scanner(_currentLine);
+		}
+		TOKEN = 0;
+		LINE += 1;
+		return res;
+	    }
+	    else if(TOKEN == 0) {
+		//this line is blank
+		String res = _currentLine;
+		_currentLine = _input.nextLine();
+		if(_PAGE_ENABLED)
+		    _paged.add(_currentLine);
+		LINE += 1;
+		TOKEN = 0;
+		_line = new Scanner(_currentLine);
+		return res;
+	    }
+
+	    //there's nothing left on the current line
+	    _currentLine = _input.nextLine();
+	    if(_PAGE_ENABLED)
+		    _paged.add(_currentLine);
+	    _line = new Scanner(_currentLine);
+	    TOKEN = 0;
+	    LINE += 1;
+
+	    //this is our hack for empty lines
+	    if(_line.hasNextLine())
+		return _line.nextLine();
+	    else
+		return _currentLine;
+	}
+
+	return null;
+    }
+    
+    public boolean hasNextLine() {
+	return checkNextLine();	
+    }
+
+    private boolean checkNextLine() {
+	if(_line == null) {
+	    if(_input.hasNextLine()) {
+		_currentLine = _input.nextLine();
+		if(_PAGE_ENABLED)
+		    _paged.add(_currentLine);
+		println("From Check: '" + _currentLine + "'");		       
+		_line = new Scanner(_currentLine);
+	    }
+	    else
+		return false;
+	}
+			
+	return (_line.hasNext() || _input.hasNextLine());
+    }
+
+    
 
     /*********************************************************
      *
@@ -365,6 +689,10 @@ public /*abstract*/ class ConceptHelperV2 {
 	    return Color.BLACK;
 	}
     }
+
+    public void DEBUG() {
+	DEBUG("");
+    }
     
     public void DEBUG(int level, Object message) {
 	if(_DEBUG_LEVEL == 0)
@@ -411,6 +739,10 @@ public /*abstract*/ class ConceptHelperV2 {
 
     public void println(Object a) {
 	System.out.println(a);
+    }
+
+    public void println() {
+	System.out.println();
     }
 
 
@@ -473,7 +805,7 @@ public /*abstract*/ class ConceptHelperV2 {
 	.setName("Interactive Mode")
 	.setDescription("Enabled interactive Mode. While in interactive mode, " +
 			"the input stream will not be pre-processed.");
-    private final BooleanCommand _page = new BooleanCommand(false, "-p --page-enabled").setName("Page Mode")
+    private final BooleanCommand _page = new BooleanCommand(false, "-p", "--page-enabled").setName("Page Mode")
 	.setDescription("Sets wether page mode is or isn't enabled. If it is enabled, " +
 			"Then all input that is read will be saved. All of the saved input will be readily accessible on a line-by-line basis with the page(line) function. "
 			+ "This may end up using too much memory if the input happens to be particularly large. This is disabled by default.");
