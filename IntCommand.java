@@ -9,29 +9,32 @@ public class IntCommand extends Command {
 	this.min = min;
 	this.max = max;
 	this.takesInput = true;
+	this.type = "Integer";
     }
     
     public int match(String[] argv, int index) {
 	String cmd = argv[index];
-	if(matched == 0) { //don't match if already matched
-	    if(synonyms.contains(cmd)) {
-		if(index + 1 < argv.length) {
-		    try {
-			int res = Integer.parseInt(argv[index+1]);
-			if(res < min || res > max) {
-			    value = res;		
-			    matched++;
-			    return index + 2; //matches and valid
-			}
-			return -1; //matches but invalid
-		    }
-		    catch (Exception e) {
-			return -1; //matches but invalid
-		    }
+	if(matched == 0 && synonyms.contains(cmd)) { //don't match if already matched
+	    if(index + 1 < argv.length) {
+		try {
+		    int res = Integer.parseInt(argv[index+1]);
+		    if(res >= min && res <= max) {
+			value = res;		
+			matched++;
+			return index + 2; //matches and valid
+		    }			
 		}
-		return -1; //matches but invalid
+		catch (Exception e) { } //it's marked as invalid regardless		    
 	    }
+	    invalid++;
+	    return -1; //matches but invalid
 	}
+
+	//can't match the same argument more than once (with this system)
+	if (matched > 0 && synonyms.contains(cmd)) {
+	    repeated++;
+	    return -1;
+	}	    
 
 	return 0; //doesnt match
     }

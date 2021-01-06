@@ -5,9 +5,13 @@ public abstract class Command {
     public int count = 0;
     public boolean mandatory = false;
     public int matched = 0;
+    protected int repeated = 0;
+    protected int invalid = 0;
     private String name = "";
     private String description = "";
     protected boolean takesInput = false;
+    protected String type = "generic";
+    
     //by default this is empty
     public Command addSynonyms(String... args) {
 	for(int i = 0; i < args.length; i++)
@@ -25,8 +29,12 @@ public abstract class Command {
 
     public abstract int match(String[] argv, int index);
 
+    public boolean invalid() {
+	return mandatory && matched == 0 || repeated > 0 || invalid > 0;
+    }
+    
     //public abstract String us
-    public String usage() {
+    public String usage(boolean colorEnabled) {
 	//return: name : list of synonyms - mandatory - description
 	String res = name;
 	res += " : { ";
@@ -35,14 +43,28 @@ public abstract class Command {
 	    res += s + " ";
 
 	if(takesInput)
-	    res += "} [input]";
+	    res += "} [" + type + "]";
 	else
 	    res += "}";
 
 	res += "\n    | Mandatory: " + mandatory;
-	res += "\n    | Input:  " + takesInput;
+	res += "\n    | Expects Argument:  " + takesInput;
 	res += "\n    | > " + description;
 
+	//check if this one is invalid
+	if(mandatory && matched == 0 || repeated > 0 || invalid > 0) {
+	    String tag = "";
+	    //determine on a case by case basis
+	    if(mandatory && matched == 0)
+		tag = String.format("ERROR: mandatory argument '%s' not supplied%n%s", name, tag);
+	    if(repeated > 0)
+		tag = String.format("ERROR: argument '%s' supplied more than once%n%s", name, tag);
+	    if(invalid > 0)
+		tag = String.format("ERROR: input for argument '%s' is invalid%n%s", name, tag);
+	    
+	    res = Color.colorize(colorEnabled, tag, Color.RED_BOLD) + res;
+	}
+	
 	return res;
     }
 

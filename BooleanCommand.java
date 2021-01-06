@@ -8,14 +8,16 @@ public class BooleanCommand extends Command {
 
     public int match(String[] argv, int index) {
 	String cmd = argv[index];
-	if(matched == 0) { //don't match if already matched
-	    if(synonyms.contains(cmd)) {
-		matched++;
-		value = !value;
-		return index+1;	
-	    }
+	if(matched == 0 && synonyms.contains(cmd)) { //don't match if already matched
+	    matched++;
+	    value = !value;
+	    return index+1;	
 	}
 
+	if(synonyms.contains(cmd)) {
+	    repeated++;
+	    return -1;
+	}
 	return 0; //doesnt match
     }
     
