@@ -121,7 +121,7 @@ public /*abstract*/ class ConceptHelperV2 {
 	
 	if(unprocessed_args != 0 && _ignore.matched == 0) {
 	    //we have a number of unprocessed arguments
-	    PRINT_ERROR_TEXT("Error: a number of arguments were not matched by any rule (index = " + index + ")");
+	    PRINT_ERROR_TEXT("ERROR: a number of arguments were not matched by any rule (index = " + index + ")");
 	    System.err.println("Unmatched arguments: " + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
 	    FAIL(1);
 	}
