@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public class BooleanCommand extends Command {
     public boolean value;
     

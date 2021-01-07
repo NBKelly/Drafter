@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public class StringCommand extends Command {
     public String value;
     

@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public interface DebugLogger {
     //expected commands:
     //DEBUG(level, message)

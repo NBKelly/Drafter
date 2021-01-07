@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public class SampleClass extends ConceptHelperV2 {
     private FileCommand inputFile;
     //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem    

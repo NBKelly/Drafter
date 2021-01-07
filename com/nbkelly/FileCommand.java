@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 import java.io.File;
 
 public class FileCommand extends Command {

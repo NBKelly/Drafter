@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 import java.util.TreeSet;
 
 public abstract class Command {

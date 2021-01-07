@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public class IntCommand extends Command {
     public int value;
     public int min;

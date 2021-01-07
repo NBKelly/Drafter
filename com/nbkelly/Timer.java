@@ -1,3 +1,5 @@
+package com.nbkelly;
+
 public class Timer {
     private final String timer_disabled = "timer disabled";
     //TODO: get rid of this main function later
