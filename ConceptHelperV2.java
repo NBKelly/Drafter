@@ -14,7 +14,7 @@ import java.math.BigInteger;
  * DEBUGF(level, x, args) -> DEBUG(level, f(x, args))
  * DEBUG() -> DEBUG("")
  */
-public /*abstract*/ class ConceptHelperV2 {
+public abstract class ConceptHelperV2 {
     /** Does this session support/enable color? */
     private boolean _COLOR_ENABLED = false;
     private boolean _COLOR_CHECKED = false;
@@ -24,11 +24,12 @@ public /*abstract*/ class ConceptHelperV2 {
     private final int _ARGUMENT_MATCH_FAILED = -1;
 
     /** list of all commands */
-    private Command[] _commands = null;
+    private Command[] _commands = new Command[0];
 
     /** page mode */
-    private boolean _PAGE_ENABLED = false;
-
+    protected boolean _PAGE_ENABLED = false;
+    protected boolean _PAGE_OPTIONAL = true;
+    
     /** interactive mode */
     private boolean _INTERACTIVE_MODE = false;
 
@@ -64,7 +65,7 @@ public /*abstract*/ class ConceptHelperV2 {
 
 	else if (!_COLOR_CHECKED) {
 	    //this supposedly only works on linux - no clue what the fuck to do on windows
-	    if(System.console() != null && System.getenv().get("TERM") != null)
+	    //if(System.console() != null && System.getenv().get("TERM") != null)
 		_COLOR_ENABLED = true;
 	    _COLOR_CHECKED = true;
 	}
@@ -74,17 +75,14 @@ public /*abstract*/ class ConceptHelperV2 {
     
     private ConceptHelperV2 self = null;
     
-
-
-    
     //THINGS THAT NEED TO BE OVERRIDDEN
-    protected void actOnCommands() { };
+    protected abstract void actOnCommands(); // { };
 
-    protected Command[] setCommands() {
+    protected abstract Command[] setCommands(); /* {
 	return new Command[0];
-    }
+	}*/
 
-    protected void solveProblem() {
+    protected abstract void solveProblem(); /* {
 	Timer t = new Timer(_DEBUG_LEVEL > 0);
 	println("Normal line");
 	print("A");
@@ -114,7 +112,7 @@ public /*abstract*/ class ConceptHelperV2 {
 	println("Here's the results of our page:");
 	for(String s: _paged)
 	    printf("paged : '%s'%n", s);
-    }
+	    }*/
 
 
 
@@ -125,10 +123,10 @@ public /*abstract*/ class ConceptHelperV2 {
     
     
     // TODO: get rid of this
-    public static void main(String[] argv) {
+    /*public static void main(String[] argv) {
 	//first we set up the commands	
 	new ConceptHelperV2().run(argv); 
-    }
+	}*/
 
     /**
      * Runs the given program.
@@ -145,28 +143,27 @@ public /*abstract*/ class ConceptHelperV2 {
      * @param argv the argument vector for the program
      * @since 1.0
      */
-    private void run(String[] argv) {
-	//first we set the default commands
-	setDefaultCommands();
+    protected void run(String[] argv) {
 	//add in any commands the user wants to add
 	addCommands(setCommands());
+	//then we set the default commands
+	addCommands(defaultCommands());	
 	//process all of the arguments
 	argv = processCommands(argv);
 	//act on the deafult commands
 	actOnDefaultCommands();
 	//act on the user commands
 	actOnCommands();
-
-	//do any other pre-processing needed
-	//TODO: this part
-
 	//run the program
 	solveProblem();
     }
 
     
-    private void setDefaultCommands() {	
-	_commands = new Command[] {_debugLevel, _interactive, _page, _help, _disableColors, _ignore};	
+    private Command[] defaultCommands() {	
+	if(_PAGE_OPTIONAL)
+	    return new Command[] {_debugLevel, _interactive, _page, _help, _disableColors, _ignore};
+	else
+	    return new Command[] {_debugLevel, _interactive, _help, _disableColors, _ignore};	
     }    
     
     private void addCommands(Command[] c) {
@@ -186,7 +183,7 @@ public /*abstract*/ class ConceptHelperV2 {
      * @param argv input arguments 
      * @return any valid unprocessed arguments
      */
-    public String[] processCommands(String[] argv) {
+    private String[] processCommands(String[] argv) {
 	int index = 0;
 	int index_last = -1;
 
@@ -206,15 +203,15 @@ public /*abstract*/ class ConceptHelperV2 {
 	}
 
 	int unprocessed_args = argv.length - index;
-	
+
+	if(_help.matched > 0)
+	    FAIL(_commands, 0, false);
 	if(unprocessed_args != 0 && _ignore.matched == 0) {
 	    //we have a number of unprocessed arguments
 	    PRINT_ERROR_TEXT("ERROR: a number of arguments were not matched by any rule (index = " + index + ")");
 	    System.err.println("Unmatched arguments: " + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
 	    FAIL(1);
-	}
-	if(_help.matched > 0)
-	    FAIL(_commands, 0, false);
+	}	
 	if(!arguments_satisfied(_commands))
 	    FAIL(_commands, 1, true);
 
@@ -407,7 +404,14 @@ public /*abstract*/ class ConceptHelperV2 {
      *     lineNumber()  - > return the current line number
      *     tokenNumber() - > return the current token number
      *     getPage(line) - > returns the paged value from line if possible, otherwise null
-     */    
+     *
+     *     makeTimer ()  - > timer
+     */
+
+    protected Timer makeTimer() {
+	return new Timer(_DEBUG_LEVEL > 0);
+    }
+    
     public int lineNumber() {
 	return LINE;
     }
