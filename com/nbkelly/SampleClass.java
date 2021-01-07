@@ -5,28 +5,23 @@ public class SampleClass extends ConceptHelperV2 {
     //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem    
     @Override public void solveProblem() {
 	Timer t = makeTimer();
-
-	while(hasNextLine())
-	    println(nextLine());
-
+	
 	println("Hello World");
-
-	println(inputFile.value);
 
 	DEBUGF(1, t.split("Finished Processing"));
     }
     
     /* set commands */
     @Override public Command[] setCommands() {
-	inputFile = new FileCommand(/*name =      */ "Input File",
-				    /*description=*/ "Auxiliary data for this program",
-				    /*mandatory  =*/ true,
-				    /*[synonyms] =*/ "-f", "--file");	
+	//inputFile = new FileCommand(/*name =      */ "Input File",
+	//			    /*description=*/ "Auxiliary data for this program",
+	//			    /*mandatory  =*/ true,
+	//			    /*[synonyms] =*/ "-f", "--file");	
 
 	//do you want paged input to be optional? This is mainly a debugging thing,
 	//or a memory management/speed thing
-	_PAGE_OPTIONAL = false;
-	_PAGE_ENABLED = false;
+	_PAGE_OPTIONAL = false; //page does not show up as a user input command
+	_PAGE_ENABLED = false;  //page is set to disabled by default
 
 	return new Command[] {inputFile};
 	//return new Command[0];

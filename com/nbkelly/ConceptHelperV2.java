@@ -798,7 +798,8 @@ public abstract class ConceptHelperV2 {
      *
      *********************************************************/
 
-    private final IntCommand _debugLevel = new IntCommand(0, 5, false, 0, "-d", "-D", "-debug", "--debug", "--debug-level")
+    private final OptionalIntCommand _debugLevel =
+	new OptionalIntCommand(0, 5, false, 1, "-d","--debug","--debug-level")
 	.setName("Debug Level")
 	.setDescription("Sets the debug level. " + 
 			"Level 0 means no debug input is displayed, " +
