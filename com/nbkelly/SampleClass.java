@@ -8,7 +8,7 @@ public class SampleClass extends ConceptHelperV2 {
 	
 	println("Hello World");
 
-	DEBUGF(1, t.split("Finished Processing"));
+	DEBUG(1, t.split("Finished Processing"));
     }
     
     /* set commands */
@@ -23,8 +23,8 @@ public class SampleClass extends ConceptHelperV2 {
 	_PAGE_OPTIONAL = false; //page does not show up as a user input command
 	_PAGE_ENABLED = false;  //page is set to disabled by default
 
-	return new Command[] {inputFile};
-	//return new Command[0];
+	//return new Command[] {inputFile};
+	return new Command[0];
     }
 
     
