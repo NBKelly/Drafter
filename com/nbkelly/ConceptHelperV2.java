@@ -32,9 +32,6 @@ public abstract class ConceptHelperV2 {
     protected boolean _PAGE_ENABLED = false;
     protected boolean _PAGE_OPTIONAL = true;
     
-    /** interactive mode */
-    private boolean _INTERACTIVE_MODE = false;
-
     /** debug level */
     protected int _DEBUG_LEVEL = 0;
     protected boolean _DEBUG = false; //true if _DEBUG_LEVEL > 0
@@ -46,7 +43,6 @@ public abstract class ConceptHelperV2 {
     private Scanner _input = null;
     private String _currentLine = null;
     private ArrayList<String> _paged = new ArrayList<String>();
-    private boolean _NEXT_GREEDY = true;
     
     /*
      * for reference:
@@ -163,9 +159,9 @@ public abstract class ConceptHelperV2 {
     
     private Command[] defaultCommands() {	
 	if(_PAGE_OPTIONAL)
-	    return new Command[] {_debugLevel, _interactive, _page, _help, _disableColors, _ignore};
+	    return new Command[] {_debugLevel, _page, _help, _disableColors, _ignore};
 	else
-	    return new Command[] {_debugLevel, _interactive, _help, _disableColors, _ignore};	
+	    return new Command[] {_debugLevel, _help, _disableColors, _ignore};	
     }    
     
     private void addCommands(Command[] c) {
@@ -807,11 +803,6 @@ public abstract class ConceptHelperV2 {
 			"and it is up to each program to decide what to display at each level."
 			+ " All debug output between levels 0 and the selected level " +
 			"will be displayed during operation of the program.");
-
-    private final BooleanCommand _interactive = new BooleanCommand(false, "-x", "-X", "--interactive-input")
-	.setName("Interactive Mode")
-	.setDescription("Enabled interactive Mode. While in interactive mode, " +
-			"the input stream will not be pre-processed.");
     private final BooleanCommand _page = new BooleanCommand(false, "-p", "--page-enabled").setName("Page Mode")
 	.setDescription("Sets wether page mode is or isn't enabled. If it is enabled, " +
 			"Then all input that is read will be saved. All of the saved input will be readily accessible on a line-by-line basis with the page(line) function. "
@@ -833,7 +824,6 @@ public abstract class ConceptHelperV2 {
     private void actOnDefaultCommands() {
 	_COLOR_HARD_DISABLED = (_disableColors.matched > 0);
 	_PAGE_ENABLED = (_page.matched > 0);
-	_INTERACTIVE_MODE = (_interactive.matched > 0);
 	_DEBUG_LEVEL = (_debugLevel.matched > 0 ? _debugLevel.getValue() : 0);
 
 	//if the debug level is greater than 0, then debug mode as a whole is enabled
