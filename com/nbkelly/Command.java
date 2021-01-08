@@ -13,6 +13,15 @@ public abstract class Command {
     private String description = "";
     protected boolean takesInput = false;
     protected String type = "generic";
+    protected boolean terminal = false;
+
+    public boolean isTerminal() { return terminal; }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Command> T setTerminal() {
+	terminal = true;
+	return (T)this;
+    }
     
     //by default this is empty
     public Command addSynonyms(String... args) {
