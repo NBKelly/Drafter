@@ -2,17 +2,19 @@ package com.nbkelly;
 
 /* imports */
 
-public class SampleClass extends ConceptHelperV2 {
+public class SampleClass extends Drafter {
     private FileCommand inputFile;
     //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem
 
     /* solve problem here */
-    @Override public void solveProblem() {
+    @Override public int solveProblem() {
 	Timer t = makeTimer();
 	
 	println("Hello World");
 
 	DEBUG(1, t.split("Finished Processing"));
+
+	return 0;
     }
 
     /* insert block */
