@@ -185,18 +185,32 @@ public class MakeHelper extends Drafter {
 
 	/*
 	 *
-	 * TODO: INSERT THE IMPORTS FILE HERE
+	 * INSERT THE IMPORTS FILE HERE
 	 *
 	 */
-	DEBUG(2, "Inserting import statements...");
+	DEBUG(2, "Inserting default import statements...");
+	res.add(originalFile.get(index++));
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	
 	for(int i = 0; i < _default_imports.length; i++) {
 	    res.add(composeImport(_default_imports[i]));
 	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
 	}
+
+	if(importFileCommand.matched > 0) {
+	    DEBUG(2, "Inserting extra import statements...");
+	    //get all lines from the extra import file
+	    var importedLines = readFile(importFileCommand.value);
+	    res.add("");
+	    res.add("/* imports from file */");
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	    for(String s : importedLines) {
+		res.add(s);
+		DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	    }
+	}
 	
 	
-	res.add(originalFile.get(index++));
-	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
 
 	/* hunt for the classname */
 	DEBUG(2, "Hunting for class opening block...");
@@ -233,8 +247,30 @@ public class MakeHelper extends Drafter {
 	 * TODO: INJECT CODE HERE
 	 *
 	 */
-	res.add(originalFile.get(index++));
-	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	if(insertCodeCommand.matched > 0) {
+	    //determine amount of whitespace at start of line
+	    int padSide = originalFile.get(index).indexOf(_insert_code_loc);
+	    String pad = "";
+	    for(int i = 0; i < padSide; i++)
+		pad += " ";
+	    
+	    DEBUG(2, "Injecting code from " + insertCodeCommand.getValue());
+	    //get all lines from the extra import file
+	    var importedLines = readFile(insertCodeCommand.value);
+	    //res.add("");
+	    res.add(pad + "/* code injected from file */");
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	    for(String s : importedLines) {
+		res.add(pad + s);
+		DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	    }
+	    //res.add("");
+	    //DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	    
+	}
+	//res.add(originalFile.get(index++));
+	//DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	index++;
 
 	/* hunt for main block */
 	DEBUG(2, "Hunting for main block...");

@@ -3,10 +3,14 @@ package com.nbkelly;
 /* imports */
 
 /* class */
-public class SampleClass extends Drafter {
-    private FileCommand inputFile;
-    //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem
+public class SampleClass extends Drafter {    
+    /* WORKFLOW:
+     *  set all needed commands with setCommands()
+     *  post-processing can be performed with actOnCommands()
+     *  the rest of your work should be based around the solveProblem() function
+     */
 
+    private FileCommand inputFile;
     /* solve problem here */
     @Override public int solveProblem() {
 	Timer t = makeTimer();
@@ -35,8 +39,6 @@ public class SampleClass extends Drafter {
 	//return new Command[] {inputFile};
 	return new Command[0];
     }
-
-    
     
     /* act after commands processed */
     @Override public void actOnCommands() {
