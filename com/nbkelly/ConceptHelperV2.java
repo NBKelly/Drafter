@@ -190,12 +190,17 @@ public abstract class ConceptHelperV2 {
 	int index_last = -1;
 
 	outer:
-	while(index != index_last && index < argv.length && _ignore.matched == 0) {
+	while(index != index_last && index < argv.length) {
 	    index_last = index;
 	    for(int i = 0; i < _commands.length; i++) {
 		int new_ind = _commands[i].match(argv, index);
 		if(new_ind > 0) { //matched rule
 		    index = new_ind;
+
+		    //if that was terminal, we must break
+		    if(_commands[i].isTerminal())
+			break outer;
+		    
 		    continue outer;
 		}
 		else if (new_ind == _ARGUMENT_MATCH_FAILED) {
@@ -807,11 +812,13 @@ public abstract class ConceptHelperV2 {
 			"and it is up to each program to decide what to display at each level."
 			+ " All debug output between levels 0 and the selected level " +
 			"will be displayed during operation of the program.");
+
     private final BooleanCommand _page = new BooleanCommand(false, "-p", "--page-enabled")
 	.setName("(Default) Page Mode")
 	.setDescription("Sets wether page mode is or isn't enabled. If it is enabled, " +
 			"Then all input that is read will be saved. All of the saved input will be readily accessible on a line-by-line basis with the page(line) function. "
 			+ "This may end up using too much memory if the input happens to be particularly large. This is disabled by default.");
+
     private final BooleanCommand _help = new BooleanCommand(false, "-h", "-h", "--help", "--show-help")
 	.setName("(Default) Display Help")
 	.setDescription("Displays this help dialogue. " +
@@ -824,7 +831,8 @@ public abstract class ConceptHelperV2 {
     
     private final BooleanCommand _ignore = new BooleanCommand(false, "-i", "--ignore-remaining")
 	.setName("(Default) Ignore Remaining")
-	.setDescription("Ignores all remaining input");
+	.setDescription("Ignores all remaining input")
+	.setTerminal();
 
     private void actOnDefaultCommands() {
 	_COLOR_HARD_DISABLED = (_disableColors.matched > 0);
