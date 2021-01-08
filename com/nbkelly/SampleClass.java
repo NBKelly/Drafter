@@ -1,8 +1,12 @@
 package com.nbkelly;
 
+/* imports */
+
 public class SampleClass extends ConceptHelperV2 {
     private FileCommand inputFile;
-    //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem    
+    //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem
+
+    /* solve problem here */
     @Override public void solveProblem() {
 	Timer t = makeTimer();
 	
@@ -10,6 +14,8 @@ public class SampleClass extends ConceptHelperV2 {
 
 	DEBUG(1, t.split("Finished Processing"));
     }
+
+    /* insert block */
     
     /* set commands */
     @Override public Command[] setCommands() {
