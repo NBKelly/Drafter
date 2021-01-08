@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
+
 public class MakeHelper extends Drafter {
     private FileCommand inputFile;
     
@@ -32,8 +34,7 @@ public class MakeHelper extends Drafter {
     private BooleanCommand overwriteAux;
 
     private final String sampleClassFileName = "com/nbkelly/SampleClass.java";
-    private final String baseClassFileName = "com/nbkelly/ConceptHelperV2.java";
-
+           
     private String baseAuxFilePath = "com/nbkelly/";
     private String[] auxFilesToCopy = new String[] {
 	"BooleanCommand.java",
@@ -48,6 +49,27 @@ public class MakeHelper extends Drafter {
 	"RegexCommand.java",
 	"StringCommand.java",
 	"Timer.java"	
+    };
+
+    private final String _import_loc = "/* imports */";    
+    private final String _classname_loc = "/* class */";
+    private final String _insert_code_loc = "/* insert block */";
+    private final String _main_loc = "/* main */";
+
+    private final String baseClassName = "Drafter";
+    
+    private final String _classname_replacement = "public class %s extends %s {"; //classname, drafter
+    private final String[] _main_replacement = new String[] {
+	"    public static void main(String[] argv) {",
+	"        new %s().run(argv);",
+	"    }"
+    };
+
+    private final String[] _default_imports = new String[] {
+	"Drafter",
+	"Command",
+	"FileCommand",
+	"Timer"
     };
     
     //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem    
@@ -106,13 +128,157 @@ public class MakeHelper extends Drafter {
 	    if(!writeFile(outputFile, outputFileLines, overwriteAux))
 		FAIL(1);
 	}
+
 	
-	ArrayList<String> baseConceptHelper = new ArrayList<String>();
+	//now we do the main file
+	DEBUG("Reading primary file");
+	File mainFile = new File(sampleClassFileName);	
+	var mainFileLines = readFile(mainFile);
+	
+	if(mainFileLines == null)
+	    FAIL(1);	
+
+	DEBUG("Assembling new project file");
+	mainFileLines = assembleMainFile(mainFileLines);
+
+	if(mainFileLines == null)
+	    FAIL(1);
+	
+	for(String s : mainFileLines)
+	    DEBUGF(3, "> %s%n", s);
+
+	//write the output file to the expected location
+	File outputFile = new File(directoryName.getValue().toString() + "/" + className + ".java");
+	if(!writeFile(outputFile, mainFileLines, overwriteMain))
+	    FAIL(1);
+	
 	DEBUG(1, t.split("Finished Processing"));
 
 	return 0;
     }
 
+    private String composeImport(String s) {
+	return String.format("import %s.%s;", auxiliaryPackageName.getValue(), s);
+    }
+
+    private ArrayList<String> assembleMainFile(ArrayList<String> originalFile) {
+	//first, insert the package name
+	ArrayList<String> res = new ArrayList<String>();
+	int index = 1;
+	
+	//we need to extract the package name from the original file and produce it
+	String packageNameProcessed = packageName(packageName.getValue());
+	res.add(packageNameProcessed);
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+
+	/* the first thing we hunt for is imports */
+	DEBUG(2, "Hunting for import block...");
+	while(index < originalFile.size() && !originalFile.get(index).contains(_import_loc)) {
+	    res.add(originalFile.get(index++));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+
+	if(index >= originalFile.size()) {
+	    ERR("RAN OUT OF INPUT WHEN HUNTING FOR IMPORT INJECT LOCATION");
+	    return null;
+	}
+
+	/*
+	 *
+	 * TODO: INSERT THE IMPORTS FILE HERE
+	 *
+	 */
+	DEBUG(2, "Inserting import statements...");
+	for(int i = 0; i < _default_imports.length; i++) {
+	    res.add(composeImport(_default_imports[i]));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+	
+	
+	res.add(originalFile.get(index++));
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+
+	/* hunt for the classname */
+	DEBUG(2, "Hunting for class opening block...");
+	while(index < originalFile.size() && !originalFile.get(index).contains(_classname_loc)) {
+	    res.add(originalFile.get(index++));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+
+	if(index >= originalFile.size()) {
+	    ERR("RAN OUT OF INPUT WHEN HUNTING FOR CLASSNAME INJECT LOCATION");
+	    return null;
+	}
+
+	res.add(String.format(_classname_replacement, name.getValue(), baseClassName));
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	
+	//we skip the /* class */ tag
+	index += 2;
+
+	/* hunt for insert block */
+	DEBUG(2, "Hunting for code-insertion block");
+	while(index < originalFile.size() && !originalFile.get(index).contains(_insert_code_loc)) {
+	    res.add(originalFile.get(index++));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+
+	if(index >= originalFile.size()) {
+	    ERR("RAN OUT OF INPUT WHEN HUNTING FOR CODE-INJECT LOCATION");
+	    return null;
+	}
+
+	/*
+	 *
+	 * TODO: INJECT CODE HERE
+	 *
+	 */
+	res.add(originalFile.get(index++));
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+
+	/* hunt for main block */
+	DEBUG(2, "Hunting for main block...");
+	while(index < originalFile.size() && !originalFile.get(index).contains(_main_loc)) {
+	    res.add(originalFile.get(index++));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+
+	if(index >= originalFile.size()) {
+	    ERR("RAN OUT OF INPUT WHEN HUNTING FOR MAIN LOCATION");
+	    return null;
+	}
+
+	res.add(_main_replacement[0]);
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	res.add(String.format(_main_replacement[1], name.getValue()));
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	res.add(_main_replacement[2]);
+	DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+
+	/* finish off remainder of file */
+	DEBUG(2, "Hunting for EOF...");
+	index += 4;
+	while(index < originalFile.size()) {
+	    res.add(originalFile.get(index++));
+	    DEBUGF(4, "> %s%n", res.get(res.size() - 1));
+	}
+	
+	return res;
+    }
+
+    //private final String _import_loc = "/* imports */";    
+    //private final String _classname_loc = "/* class */";
+    //private final String _insert_code_loc = "/* insert block */";
+    //private final String _main_loc = "/* main */";
+    //
+    //private final String _classname_replacement = "public class %s extends %s {"; //classname, drafter
+    //private final String[] _main_replacement = new String[] {
+    //	"\tpublic static void main(String[] argv) {",
+    //	"\t\tnew %s().run(argv);",
+    //	"\t}"
+    //}
+
+    
     private ArrayList<String> readFile(File fileToCopy) {
 	//check the file exists
 	if(!fileToCopy.exists()) {
@@ -150,6 +316,10 @@ public class MakeHelper extends Drafter {
 
 	return outputFileLines;
     }
+
+
+
+		
     
     private boolean writeFile(File outputFile, ArrayList<String> contents, BooleanCommand overwrite) {
 	try {
