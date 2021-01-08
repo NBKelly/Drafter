@@ -58,8 +58,9 @@ public abstract class Command {
 	else
 	    res += "}";
 
-	res += "\n    | Mandatory: " + mandatory;
-	res += "\n    | Expects Argument:  " + takesInput;
+	res += "\n    | " + (mandatory ? "Mandatory":"Optional");
+	if(takesInput)
+	    res += "\n    | Expects Argument of type [" + type + "]";// + takesInput;
 	res += "\n    | > " + description;
 
 	//check if this one is invalid
