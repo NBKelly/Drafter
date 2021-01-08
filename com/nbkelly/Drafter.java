@@ -16,7 +16,7 @@ import java.math.BigInteger;
  * DEBUGF(level, x, args) -> DEBUG(level, f(x, args))
  * DEBUG() -> DEBUG("")
  */
-public abstract class ConceptHelperV2 {
+public abstract class Drafter {
     /** Does this session support/enable color? */
     private boolean _COLOR_ENABLED = false;
     private boolean _COLOR_CHECKED = false;
@@ -75,7 +75,7 @@ public abstract class ConceptHelperV2 {
 	return _COLOR_ENABLED;
     }
     
-    private ConceptHelperV2 self = null;
+    private Drafter self = null;
     
     //THINGS THAT NEED TO BE OVERRIDDEN
     protected abstract void actOnCommands(); // { };
@@ -118,7 +118,7 @@ public abstract class ConceptHelperV2 {
 
 
 
-    public ConceptHelperV2() {
+    public Drafter() {
 	self = this;
 	_input = new Scanner(System.in);
     }
