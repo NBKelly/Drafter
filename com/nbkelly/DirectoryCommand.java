@@ -2,17 +2,17 @@ package com.nbkelly;
 
 import java.io.File;
 
-public class FileCommand extends Command {
+public class DirectoryCommand extends Command {
     public File value;
         
-    public FileCommand(boolean mandatory, String... synonyms) {
+    public DirectoryCommand(boolean mandatory, String... synonyms) {
 	addSynonyms(synonyms).setMandatory(mandatory);
 	this.value = null;
 	this.takesInput = true;
 	this.type = "FileName";
     }
 
-    public FileCommand(String name, String description, boolean mandatory, String... synonyms) {
+    public DirectoryCommand(String name, String description, boolean mandatory, String... synonyms) {
 	addSynonyms(synonyms).setMandatory(mandatory);
 	this.value = null;
 	this.takesInput = true;
@@ -29,7 +29,7 @@ public class FileCommand extends Command {
 		String path = argv[index+1];
 		File f = new File(path);
 		matched++;
-		if (f.exists() && f.isFile()) {
+		if (f.exists() && f.isDirectory()) {
 		    value = f;		    
 		    return index + 2;
 		}
