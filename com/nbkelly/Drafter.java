@@ -705,8 +705,9 @@ public abstract class Drafter {
 	DEBUG("");
     }
 
-    public void ERR(String message) {
+    public int ERR(String message) {
 	System.err.println(_DEBUG_COLORIZE(message.toString(), _DEBUG_TO_COLOR(5)));
+	return 1;
     }
     
     public void DEBUG(int level, Object message) {
