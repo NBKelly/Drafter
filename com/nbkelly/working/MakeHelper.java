@@ -15,8 +15,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
-
 public class MakeHelper extends Drafter {
     private FileCommand inputFile;
     
@@ -33,9 +31,9 @@ public class MakeHelper extends Drafter {
     private BooleanCommand overwriteMain;
     private BooleanCommand overwriteAux;
 
-    private final String sampleClassFileName = "com/nbkelly/SampleClass.java";
+    private final String sampleClassFileName = "/com/nbkelly/SampleClass.java";
            
-    private String baseAuxFilePath = "com/nbkelly/";
+    private String baseAuxFilePath = "/com/nbkelly/";
     private String[] auxFilesToCopy = new String[] {
 	"BooleanCommand.java",
 	"Color.java",
@@ -107,7 +105,9 @@ public class MakeHelper extends Drafter {
 	for(int i = 0; i < auxFilesToCopy.length; i++) {
 	    String aux_path = baseAuxFilePath + auxFilesToCopy[i];
 	    String res_path = auxiliaryDirectoryName.getValue().getPath() + "/" + auxFilesToCopy[i];
-	    File fileToCopy = new File(aux_path);
+	    File fileToCopy = readResource(aux_path); //new File(aux_path);
+	    if(fileToCopy == null)
+		FAIL(1);
 
 	    
 	    var outputFileLines = readFile(fileToCopy);
@@ -132,7 +132,10 @@ public class MakeHelper extends Drafter {
 	
 	//now we do the main file
 	DEBUG("Reading primary file");
-	File mainFile = new File(sampleClassFileName);	
+	File mainFile = readResource(sampleClassFileName);
+	if(mainFile == null)
+	    FAIL(1);
+	
 	var mainFileLines = readFile(mainFile);
 	
 	if(mainFileLines == null)
@@ -314,6 +317,16 @@ public class MakeHelper extends Drafter {
     //	"\t}"
     //}
 
+    private File readResource(String path) {
+	try {
+	    File f = new File(getClass().getResource(path).toURI());	    
+	    return f;
+	} catch (Exception e) {
+	    ERR("Couldn't load resource at " + path);
+	    ERR(e.toString());
+	    return null;
+	}
+    }
     
     private ArrayList<String> readFile(File fileToCopy) {
 	//check the file exists
