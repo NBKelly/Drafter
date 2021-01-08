@@ -823,7 +823,8 @@ public abstract class ConceptHelperV2 {
 	.setName("(Default) Display Help")
 	.setDescription("Displays this help dialogue. " +
 			"This dialogue will also display if one " +
-			"of the inputs happens to be invalid.");
+			"of the inputs happens to be invalid.")
+	.setTerminal();
     
     private final BooleanCommand _disableColors = new BooleanCommand(false, "-dc", "--disable-colors")
 	.setName("(Default) Disable Colors")
