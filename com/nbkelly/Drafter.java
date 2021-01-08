@@ -84,7 +84,7 @@ public abstract class Drafter {
 	return new Command[0];
 	}*/
 
-    protected abstract void solveProblem(); /* {
+    protected abstract int solveProblem(); /* {
 	Timer t = new Timer(_DEBUG_LEVEL > 0);
 	println("Normal line");
 	print("A");
@@ -251,10 +251,10 @@ public abstract class Drafter {
     /**
      * Fails with the given exit code
      */
-    private void FAIL(int exit) {
+    protected void FAIL(int exit) {
 	System.exit(exit);
     }
-    
+
     /**
      * Prints out the usage for all of the commands, and then gracefully exists with given status code
      *
@@ -703,6 +703,10 @@ public abstract class Drafter {
 
     public void DEBUG() {
 	DEBUG("");
+    }
+
+    public void ERR(String message) {
+	System.err.println(_DEBUG_COLORIZE(message.toString(), _DEBUG_TO_COLOR(5)));
     }
     
     public void DEBUG(int level, Object message) {
