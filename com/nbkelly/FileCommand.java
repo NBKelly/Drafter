@@ -33,8 +33,8 @@ public class FileCommand extends Command {
 		    value = f;		    
 		    return index + 2;
 		}
-		invalid++;
 	    }
+	    invalid++;
 	    return -1; //matches but invalid	    
 	}
 
