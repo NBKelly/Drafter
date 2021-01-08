@@ -2,6 +2,7 @@ package com.nbkelly;
 
 /* imports */
 
+/* class */
 public class SampleClass extends Drafter {
     private FileCommand inputFile;
     //WORKFLOW: Set an needed commands, then act on the commands, then solve the problem
@@ -47,6 +48,4 @@ public class SampleClass extends Drafter {
     public static void main(String[] argv) {
 	new SampleClass().run(argv);
     }
-
-    
 }
