@@ -3,9 +3,9 @@ package com.nbkelly;
 public class BooleanCommand extends Command {
     public boolean value;
     
-    public BooleanCommand(boolean defaultValue, String... synonyms) {
-	addSynonyms(synonyms).setMandatory(false);
-	this.value = defaultValue;
+    public BooleanCommand(boolean mandatory, String... synonyms) {
+	addSynonyms(synonyms).setMandatory(mandatory);
+	this.value = false;
     }
 
     public int match(String[] argv, int index) {
