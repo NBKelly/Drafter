@@ -15,6 +15,10 @@ public abstract class Command {
     protected String type = "generic";
     protected boolean terminal = false;
 
+    public String getName() {
+	return name;
+    }
+    
     public boolean isTerminal() { return terminal; }
 
     @SuppressWarnings("unchecked")
