@@ -22,6 +22,10 @@ public abstract class ConceptHelperV2 {
     private boolean _COLOR_CHECKED = false;
     private boolean _COLOR_HARD_DISABLED = false;
 
+    /** some handy keywords */
+    protected final boolean MANDATORY = true;
+    protected final boolean OPTIONAL  = false;
+    
     /** used in argument processing */    
     private final int _ARGUMENT_MATCH_FAILED = -1;
 
@@ -796,29 +800,30 @@ public abstract class ConceptHelperV2 {
 
     private final OptionalIntCommand _debugLevel =
 	new OptionalIntCommand(0, 5, false, 1, "-d","--debug","--debug-level")
-	.setName("Debug Level")
+	.setName("(Default) Debug Level")
 	.setDescription("Sets the debug level. " + 
 			"Level 0 means no debug input is displayed, " +
 			"the allowable range for debug is (0, 5), "+
 			"and it is up to each program to decide what to display at each level."
 			+ " All debug output between levels 0 and the selected level " +
 			"will be displayed during operation of the program.");
-    private final BooleanCommand _page = new BooleanCommand(false, "-p", "--page-enabled").setName("Page Mode")
+    private final BooleanCommand _page = new BooleanCommand(false, "-p", "--page-enabled")
+	.setName("(Default) Page Mode")
 	.setDescription("Sets wether page mode is or isn't enabled. If it is enabled, " +
 			"Then all input that is read will be saved. All of the saved input will be readily accessible on a line-by-line basis with the page(line) function. "
 			+ "This may end up using too much memory if the input happens to be particularly large. This is disabled by default.");
     private final BooleanCommand _help = new BooleanCommand(false, "-h", "-h", "--help", "--show-help")
-	.setName("Display Help")
+	.setName("(Default) Display Help")
 	.setDescription("Displays this help dialogue. " +
 			"This dialogue will also display if one " +
 			"of the inputs happens to be invalid.");
     
     private final BooleanCommand _disableColors = new BooleanCommand(false, "-dc", "--disable-colors")
-	.setName("Disable Colors")
+	.setName("(Default) Disable Colors")
 	.setDescription("Disables the output of any colorized strings");
     
     private final BooleanCommand _ignore = new BooleanCommand(false, "-i", "--ignore-remaining")
-	.setName("Ignore Remaining")
+	.setName("(Default) Ignore Remaining")
 	.setDescription("Ignores all remaining input");
 
     private void actOnDefaultCommands() {
