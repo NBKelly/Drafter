@@ -22,9 +22,9 @@ public abstract class Command {
     public boolean isTerminal() { return terminal; }
 
     @SuppressWarnings("unchecked")
-    public <T extends Command> T setTerminal() {
+    public <Sneed extends Command> Sneed setTerminal() {
 	terminal = true;
-	return (T)this;
+	return (Sneed)this;
     }
     
     //by default this is empty

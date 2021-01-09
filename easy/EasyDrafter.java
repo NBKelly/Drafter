@@ -25,7 +25,7 @@ public class EasyDrafter extends Drafter {
 	//given a classname (com.nbkelly.formerly.Chucks),
 	//and an auxiliary packagename (com.nbkelly.aux),
 	//then call:
-	//  drafter.sh -n [classname] -p [packagename] -d [packagedirectory] -ap [aux-package-name]
+	//  drafter.sh -n [classname] -p [packagename] -l [packagedirectory] -ap [aux-package-name]
 	//
 
 	String name = "";
@@ -68,8 +68,8 @@ public class EasyDrafter extends Drafter {
 
 	DEBUG(1, t.split("Finished Processing"));
 
-	//  drafter.sh -n [classname] -p [packagename] -d [packagedirectory] -ap [aux-package-name]
-	printf("-n %s -p %s -d %s -ap %s -ad %s -d %d%n", name, packageName, packageDir, auxPackageName, auxDirName, GET_DEBUG_LEVEL());
+	//  drafter.sh -n [classname] -p [packagename] -l [packagedirectory] -ap [aux-package-name]
+	printf("-n %s -p %s -l %s -ap %s -ad %s -d %d%n", name, packageName, packageDir, auxPackageName, auxDirName, GET_DEBUG_LEVEL());
 	
 	return 0;
     }
