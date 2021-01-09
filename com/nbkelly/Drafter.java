@@ -59,6 +59,10 @@ public abstract class Drafter {
      *   _PAGE_ENABLED : page mode enabled
      *   _NEXT_GREEDY  : next churns through lines
      */
+
+    protected int GET_DEBUG_LEVEL() {
+	return _DEBUG_LEVEL;
+    }
     
     /** performs check-once analysis to enable colors */
     private boolean _COLOR_ENABLED() {
