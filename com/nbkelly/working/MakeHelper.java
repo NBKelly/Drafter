@@ -457,9 +457,10 @@ public class MakeHelper extends Drafter {
 	    .setDescription("The package name for the main project file. Must follow package naming conventions");
 
 	directoryName = new DirectoryCommand("Package Directory",
-					"Directory in which the main program goes",
-					MANDATORY,
-					"-l", "--location", "--primary-directory");
+					     "Directory in which the main program goes",
+					     MANDATORY,
+					     false,
+					     "-l", "--location", "--primary-directory");
 
 	auxiliaryPackageName = new RegexCommand(null, MANDATORY, validPackage, "-ap", "--aux-package-name")
 	    .setName("Auxiliary Package Name")
@@ -467,9 +468,10 @@ public class MakeHelper extends Drafter {
 			    + " Must follow package naming  conventions");
 
 	auxiliaryDirectoryName = new DirectoryCommand("Auxiliary Package Directory",
-						 "Directory in which the auxiliary classes go",
-						 MANDATORY,
-						 "-ad", "--auxiliary-directory");
+						      "Directory in which the auxiliary classes go",
+						      MANDATORY,
+						      false,
+						      "-ad", "--auxiliary-directory");
 	
 
 	importFileCommand = new FileCommand("Additional Imports",
@@ -519,8 +521,12 @@ public class MakeHelper extends Drafter {
 	//use this if you have any complicated pre-processing you want to keep out of the
 	//main solveProblem function
 
-	//see that we can write to the given directories and read from the given directories
-	//TODO: this
+	//here, we just want to make these directories if they do not exist
+	if(!auxiliaryDirectoryName.getValue().exists())
+	    auxiliaryDirectoryName.getValue().mkdirs();
+
+	if(!directoryName.getValue().exists())
+	    directoryName.getValue().mkdirs();
     }
     
     /* main */
