@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-javac -classpath $SCRIPTPATH easy/EasyDrafter.java
+javac -classpath $SCRIPTPATH "$SCRIPTPATH/easy/EasyDrafter.java"
 
 if [ $? -ne 0 ]; then
     echo "Could not compile easydrafter"
