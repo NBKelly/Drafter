@@ -88,7 +88,7 @@ public abstract class Drafter {
 	return new Command[0];
 	}*/
 
-    protected abstract int solveProblem(); /* {
+    protected abstract int solveProblem() throws Exception; /* {
 	Timer t = new Timer(_DEBUG_LEVEL > 0);
 	println("Normal line");
 	print("A");
@@ -161,10 +161,28 @@ public abstract class Drafter {
 	//act on the user commands
 	actOnCommands();
 	//run the program
-	solveProblem();
+	doSolveProblem();
     }
 
-    
+    private void doSolveProblem() {
+	try {
+	    int res = solveProblem();
+	    if(res != 0) {
+		ERR(String.format("solveProblem() failed at line %s token %s with code %d",
+				  LINE, TOKEN, res));
+		if(_currentLine != null)
+		    ERR("Current Line: >" + _currentLine);
+		FAIL(1);
+	    }
+	} catch (Exception e) {
+	    ERR(String.format("solveProblem() failed at line %s token %s with exception %s:%n%s",
+			      LINE, TOKEN, e.toString(), arrayToString(e.getStackTrace(), "\n")));
+	    if(_currentLine != null)
+		ERR("Current Line: " + _currentLine);
+	    FAIL(1);		
+	}
+    }
+
     private Command[] defaultCommands() {	
 	if(_PAGE_OPTIONAL)
 	    return new Command[] {_debugLevel, _page, _help, _disableColors, _ignore};
@@ -293,6 +311,18 @@ public abstract class Drafter {
 	return res.toString() + "]";
     }
 
+    private <T> String arrayToString(T[] arr, String delim) {
+	var res = new StringBuilder("[ ");
+	for(int i = 0; i < arr.length; i++)
+	    if(i != arr.length - 1)
+		res.append(arr[i].toString() + delim);
+	    else
+		res.append(arr[i].toString());
+
+	return res.toString() + "]";
+    }
+
+    
     private String arrayToString(int[] arr) {
 	var res = new StringBuilder("[ ");
 	for(int i = 0; i < arr.length; i++)

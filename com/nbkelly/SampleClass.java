@@ -12,14 +12,14 @@ public class SampleClass extends Drafter {
 
     private FileCommand inputFile;
     /* solve problem here */
-    @Override public int solveProblem() {
+    @Override public int solveProblem() throws Exception {
 	Timer t = makeTimer();
 	
 	println("Hello World");
-
+		
 	DEBUG(1, t.split("Finished Processing"));
 
-	return 0;
+	return 1;
     }
 
     /* insert block */
