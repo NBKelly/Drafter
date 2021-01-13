@@ -9,6 +9,12 @@ if [ $? -ne 0 ]; then
 fi
 
 output=$(java -classpath $SCRIPTPATH easy.EasyDrafter $@)
+
+if [ $? -ne 0 ]; then
+    exit 1
+fi
+
+
 echo "$SCRIPTPATH/drafter.sh $output"
 #echo $output
 
