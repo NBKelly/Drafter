@@ -233,9 +233,9 @@ public abstract class Drafter {
 
 	int unprocessed_args = argv.length - index;
 
-	if(_help.matched > 0)
+	if(_help.matched())
 	    FAIL(_commands, 0, false);
-	if(unprocessed_args != 0 && _ignore.matched == 0) {
+	if(unprocessed_args != 0 && !_ignore.matched()) {
 	    //we have a number of unprocessed arguments
 	    PRINT_ERROR_TEXT("ERROR: a number of arguments were not matched by any rule (index = " + index + ")");
 	    System.err.println("Unmatched arguments: " + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
@@ -256,7 +256,7 @@ public abstract class Drafter {
      */
     private boolean arguments_satisfied(Command[] commands) {
 	for(int i =0; i < commands.length; i++)
-	    if(commands[i].mandatory && commands[i].matched == 0)
+	    if((commands[i].mandatory && !commands[i].matched()) || !commands[i].valid())
 		return false;
 
 	return true;
@@ -875,9 +875,9 @@ public abstract class Drafter {
 	.setTerminal();
 
     private void actOnDefaultCommands() {
-	_COLOR_HARD_DISABLED = (_disableColors.matched > 0);
-	_PAGE_ENABLED = (_page.matched > 0);
-	_DEBUG_LEVEL = (_debugLevel.matched > 0 ? _debugLevel.getValue() : 0);
+	_COLOR_HARD_DISABLED = (_disableColors.matched());
+	_PAGE_ENABLED = (_page.matched());
+	_DEBUG_LEVEL = (_debugLevel.matched() ? _debugLevel.getValue() : 0);
 
 	//if the debug level is greater than 0, then debug mode as a whole is enabled
 	_DEBUG = _DEBUG_LEVEL > 0;
