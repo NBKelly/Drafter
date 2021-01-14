@@ -4,11 +4,12 @@ import java.util.TreeSet;
 /*
  * Enforces all of, or none of, the commands given
  */
-public class AllOrNothingCommand extends Command {
+public class SingleChoiceCommand extends Command {
     public Command[] subCommands;
     public int[] match_status;
+    public Command matchedCommand = null;
     
-    public AllOrNothingCommand(String name, Command... subCommands) {
+    public SingleChoiceCommand(String name, Command... subCommands) {
 	if(subCommands.length == 0)
 	    throw new IllegalArgumentException("All or Nothing given with zero inputs");
 	
@@ -34,6 +35,13 @@ public class AllOrNothingCommand extends Command {
 	    }
 	    else if(submatch > 0) {
 		match_status[i] = submatch;
+		if(matchedCommand != null && matchedCommand != subCommands[i]) {
+		    repeated++;
+		    return -1;
+		}
+		else
+		    matchedCommand = subCommands[i];		    
+
 		return submatch;
 	    }
 	}
@@ -46,12 +54,12 @@ public class AllOrNothingCommand extends Command {
     }
     
     @Override public String usage(boolean colorEnabled) {
-	String header = "All or Nothing:";
+	String header = "Single Choice:";
 	String res = "\n";
-	if(!valid())
-	    res = Color.colorize(colorEnabled, "\nAll or Nothing rule violated", Color.RED_BOLD) + res;	
+	if(repeated > 0)
+	    res = Color.colorize(colorEnabled, "\nSingle choice rule violated", Color.RED_BOLD) + res;
 	for(int i = 0; i < subCommands.length; i++) {
-	    res = res + subCommands[i].usage(colorEnabled, /* suppressMandatory */ valid());
+	    res = res + subCommands[i].usage(colorEnabled, /* suppressMandatory */ valid() && repeated == 0);
 	    if(i != subCommands.length - 1)
 		res = res + "\n";
 	}
@@ -64,22 +72,10 @@ public class AllOrNothingCommand extends Command {
     }
 
     @Override public boolean valid() {
-	return matched();
+	return matched() || !mandatory;
     }
-
+    
     @Override public boolean matched() {
-	int hits = 0;
-	for(int i = 0; i < match_status.length; i++) {
-	    if(match_status[i] > 0) {
-		if(subCommands[i].valid())
-		    hits++;
-		else
-		    return false;
-	    }
-	    else if (match_status[i] < 0)
-		return false;
-	}
-
-	return (hits == 0 || hits == match_status.length);	
+	return matchedCommand != null && matchedCommand.valid();
     }
 }
