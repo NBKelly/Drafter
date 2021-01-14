@@ -42,11 +42,57 @@ public abstract class Command {
 	return this;
     }
 
+    public boolean matched() {
+	return matched >= 1;
+    }
+    
     public abstract int match(String[] argv, int index);
 
     public boolean invalid() {
 	return mandatory && matched == 0 || repeated > 0 || invalid > 0;
     }
+
+    public boolean valid() {
+	return true;
+    }
+    
+    public String usage(boolean colorEnabled, boolean suppressMandatory) {
+	//return: name : list of synonyms - mandatory - description
+	String res = name;
+	res += " : { ";
+
+	for(String s : synonyms)
+	    res += s + " ";
+
+	if(takesInput)
+	    res += "} [" + type + "]";
+	else
+	    res += "}";
+
+	
+	res += "\n    | " + (mandatory ? "Mandatory":"Optional");
+	if(takesInput)
+	    res += "\n    | Expects Argument of type [" + type + "]";// + takesInput;
+	res += "\n    | > " + description;
+
+	//check if this one is invalid
+	if(mandatory && matched == 0 || repeated > 0 || invalid > 0) {
+	    String tag = "";
+	    //determine on a case by case basis
+	    if(!suppressMandatory)
+		if(mandatory && matched == 0)
+		    tag = String.format("ERROR: mandatory argument '%s' not supplied%n%s", name, tag);
+	    if(repeated > 0)
+		tag = String.format("ERROR: argument '%s' supplied more than once%n%s", name, tag);
+	    if(invalid > 0)
+		tag = String.format("ERROR: input for argument '%s' is invalid%n%s", name, tag);
+	    
+	    res = Color.colorize(colorEnabled, tag, Color.RED_BOLD) + res;
+	}
+	
+	return res;
+    }
+
     
     //public abstract String us
     public String usage(boolean colorEnabled) {
