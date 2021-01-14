@@ -46,6 +46,8 @@ public class MakeHelper extends Drafter {
 	"OptionalIntCommand.java",
 	"RegexCommand.java",
 	"StringCommand.java",
+	"AllOrNothingCommand.java",
+	"SingleChoiceCommand.java",
 	"Timer.java"	
     };
 
