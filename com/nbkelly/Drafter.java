@@ -5,6 +5,8 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.io.File;
+import java.nio.file.Files;
 
 /*
  * print(x)
@@ -402,6 +404,34 @@ public abstract class Drafter {
 	return Arrays.copyOfRange(arr, cutAt, arr.length);
     }
 
+    public ArrayList<String> readFileLines(File fileToCopy) {
+	//check the file exists
+	if(!fileToCopy.exists()) {
+	    ERR(String.format("The file %s, which should exist, does not!", fileToCopy));
+	    return null;
+	}
+	
+	//check the file is readable
+	//check the file exists
+	if(!Files.isReadable(fileToCopy.toPath())) {
+	    ERR(String.format("The file %s, which does exist, is not readable!", fileToCopy));
+	    return null;
+	}
+	
+	ArrayList<String> outputFileLines = new ArrayList<String>();
+	
+	try {
+	    DEBUG(1, "Reading File: " + fileToCopy);
+	    outputFileLines = new ArrayList<String>(Files.readAllLines(fileToCopy.toPath()));
+	} catch (Exception e) {
+	    ERR(String.format("Failure when reading from file %s", fileToCopy));
+	    ERR(e.toString());
+	    return null;
+	}
+	
+	return outputFileLines;
+    }    
+    
     /*********************************************************
      *
      *                     INPUT COMMANDS
