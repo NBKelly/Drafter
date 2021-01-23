@@ -19,7 +19,7 @@ public class SampleClass extends Drafter {
 		
 	DEBUG(1, t.split("Finished Processing"));
 
-	return 1;
+	return 0;
     }
 
     /* insert block */
