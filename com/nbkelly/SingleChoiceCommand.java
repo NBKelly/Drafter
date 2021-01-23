@@ -56,7 +56,7 @@ public class SingleChoiceCommand extends Command {
     @Override public String usage(boolean colorEnabled) {
 	String header = "Single Choice:";
 	String res = "\n";
-	if(repeated > 0)
+	if(repeated > 0 || !valid())
 	    res = Color.colorize(colorEnabled, "\nSingle choice rule violated", Color.RED_BOLD) + res;
 	for(int i = 0; i < subCommands.length; i++) {
 	    res = res + subCommands[i].usage(colorEnabled, /* suppressMandatory */ valid() && repeated == 0);
