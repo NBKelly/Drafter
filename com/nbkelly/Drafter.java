@@ -18,14 +18,21 @@ import java.nio.file.Files;
  * DEBUGF(level, x, args) -> DEBUG(level, f(x, args))
  * DEBUG() -> DEBUG("")
  */
+/**
+ * Main Pipeline: <br>
+ * 1) setCommands(): set the commands this program depends upon.<br>
+ * 2) actOnCommands(): pre-process all the commands as needed.<br>
+ * 3) doSolveProblem(): solve whatever problem you need to solve.<br>
+ */
 public abstract class Drafter {
     /** Does this session support/enable color? */
     private boolean _COLOR_ENABLED = false;
     private boolean _COLOR_CHECKED = false;
     private boolean _COLOR_HARD_DISABLED = false;
 
-    /** some handy keywords */
+    /** Keyword for mandatory commands */
     protected final boolean MANDATORY = true;
+    /** Keyword for optional commands */
     protected final boolean OPTIONAL  = false;
     
     /** used in argument processing */    
@@ -36,10 +43,12 @@ public abstract class Drafter {
 
     /** page mode */
     protected boolean _PAGE_ENABLED = false;
+    /** Is page mode user-optional? */
     protected boolean _PAGE_OPTIONAL = true;
     
     /** debug level */
     protected int _DEBUG_LEVEL = 0;
+    /** is debug enabled? if _DEBUG_LEVEL gt 0, this will be true */
     protected boolean _DEBUG = false; //true if _DEBUG_LEVEL > 0
 
     /** read input */
@@ -49,6 +58,9 @@ public abstract class Drafter {
     private Scanner _input = null;
     private String _currentLine = null;
     private ArrayList<String> _paged = new ArrayList<String>();
+
+    /** self */
+    private Drafter self = null;
     
     /*
      * for reference:
@@ -62,11 +74,22 @@ public abstract class Drafter {
      *   _NEXT_GREEDY  : next churns through lines
      */
 
+    /**
+     * Gets the debug level of this program.
+     *
+     * @return The debug level of this program.
+     */
     protected int GET_DEBUG_LEVEL() {
 	return _DEBUG_LEVEL;
     }
     
-    /** performs check-once analysis to enable colors */
+    /** 
+     * performs check-once analysis to enable colors 
+     * <p>
+     * TODO: try to make sure this works right
+     *
+     * @return true if color is enabled
+     */
     private boolean _COLOR_ENABLED() {
 	if(_COLOR_HARD_DISABLED)
 	    return false;
@@ -81,61 +104,48 @@ public abstract class Drafter {
 	return _COLOR_ENABLED;
     }
     
-    private Drafter self = null;
-    
-    //THINGS THAT NEED TO BE OVERRIDDEN
-    protected abstract void actOnCommands(); // { };
+    /**
+     * Post-process commands.
+     * <p>
+     * In the execution pipeline, this occurs after the user commands have validated, 
+     * but before the solveProblem command begins. Use this section to sanity check
+     * your inputs and variables, to assert that files exist, etc.
+     */
+    protected abstract void actOnCommands(); 
 
-    protected abstract Command[] setCommands(); /* {
-	return new Command[0];
-	}*/
+    /**
+     * Construct a set of command-arguments that the user must enter to run the program.
+     * <p>
+     * In the execution pipeline, this occurs before commands are validated and
+     * before the solveProblem command begins. Use this section to define the parameters of the
+     * problem in terms of what the user interacts with. See the *Command classes for more details.
+     *
+     * @return an array of commands representing what the user must interact with
+     */
+    protected abstract Command[] setCommands(); 
 
-    protected abstract int solveProblem() throws Exception; /* {
-	Timer t = new Timer(_DEBUG_LEVEL > 0);
-	println("Normal line");
-	print("A");
-	print("B");
-	println(a2s(new char[]{'C', 'D'}));
-	//'C');
+    /**
+     * Perform the necessary steps to solve your problem.
+     * <p>
+     * In the execution pipeline, this occurs after commands are specified and validated.
+     * Use this section to perform the main computations necessary to run your program.
+     *
+     * @return an integer return code marking the exit status of your program. 0 = success,
+     * anything else marks failure.
+     */
+    protected abstract int solveProblem() throws Exception;
 
-	DEBUG("PLAIN DEBUG");
-	DEBUG(0, "DEBUG LEVEL 0");
-	DEBUG(1, "DEBUG LEVEL 1");
-	DEBUG(2, "DEBUG LEVEL 2");
-	DEBUGF(3, "DEBUG LEVEL %d%n", 3);
-	DEBUG(4, "DEBUG LEVEL 4");
-	DEBUG(5, "DEBUG LEVEL 5");
-	DEBUG(6, "DEBUG LEVEL 6");
-
-	println(t.splitf("Solve Time: %fs"));
-	
-	//println("Has Next: " + hasNext());
-	println("First Line: " + nextLine());
-	println("Has Next: " + hasNext());
-	println(next());
-	println(next());
-	while(hasNextLine())
-	    println(nextLine());
-
-	println("Here's the results of our page:");
-	for(String s: _paged)
-	    printf("paged : '%s'%n", s);
-	    }*/
-
-
-
+    /**
+     * The drafter template class allows for the effecient and clean drafting of
+     * small to medium sized programs, and allows a level of strongly defined input-scrubbing
+     * that should serve to help seperate most of the headaches and repetitive aspects of bulk
+     * programming tasks (such as programming contests like adventOfCode, etc).
+     */
     public Drafter() {
 	self = this;
 	_input = new Scanner(System.in);
     }
-    
-    
-    // TODO: get rid of this
-    /*public static void main(String[] argv) {
-	//first we set up the commands	
-	new ConceptHelperV2().run(argv); 
-	}*/
-
+        
     /**
      * Runs the given program.
      * <p>
@@ -828,39 +838,92 @@ public abstract class Drafter {
 
     //array to str
 
-    
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(Object[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(int[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(long[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(float[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(double[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(boolean[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(byte[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(short[] a) {
 	return arrayToString(a);
     }
 
+    /**
+     * Flatten an array to a string
+     *
+     * @param a an array
+     * @return a string representation of that array
+     */
     public String a2s(char[] a) {
 	return arrayToString(a);
     }
