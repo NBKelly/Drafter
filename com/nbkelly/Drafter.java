@@ -19,6 +19,11 @@ import java.nio.file.Files;
  * DEBUG() -> DEBUG("")
  */
 /**
+ * The Drafter class serves as the base of the 'Drafter' drafting tool.
+ * <p>
+ * this class is not meant to be directly inherited, but rather a subclass and set of 
+ * auxiliary files are generated using drafter.sh or easy.sh
+ * <p>
  * Main Pipeline: <br>
  * 1) setCommands(): set the commands this program depends upon.<br>
  * 2) actOnCommands(): pre-process all the commands as needed.<br>
@@ -290,7 +295,8 @@ public abstract class Drafter {
     }
 
     /**
-     * Prints out the usage for all of the commands, and then gracefully exists with given status code
+     * Prints out the usage for all of the commands,
+     * and then gracefully exists with given status code
      *
      * @param commands the set of all commands
      * @return exits the current program
@@ -414,27 +420,36 @@ public abstract class Drafter {
 	return Arrays.copyOfRange(arr, cutAt, arr.length);
     }
 
-    public ArrayList<String> readFileLines(File fileToCopy) {
+    /**
+     * Sanity checks a file, then returns the lines comprising that file.
+     * <p>
+     * If the file cannot be read, ann appropriate error will be given and null will
+     * be returned.
+     *
+     * @param fileToRead The file to read
+     * @return the output files, or null if the file could not be read
+     */
+    public ArrayList<String> readFileLines(File fileToRead) {
 	//check the file exists
-	if(!fileToCopy.exists()) {
-	    ERR(String.format("The file %s, which should exist, does not!", fileToCopy));
+	if(!fileToRead.exists()) {
+	    ERR(String.format("The file %s, which should exist, does not!", fileToRead));
 	    return null;
 	}
 	
 	//check the file is readable
 	//check the file exists
-	if(!Files.isReadable(fileToCopy.toPath())) {
-	    ERR(String.format("The file %s, which does exist, is not readable!", fileToCopy));
+	if(!Files.isReadable(fileToRead.toPath())) {
+	    ERR(String.format("The file %s, which does exist, is not readable!", fileToRead));
 	    return null;
 	}
 	
 	ArrayList<String> outputFileLines = new ArrayList<String>();
 	
 	try {
-	    DEBUG(1, "Reading File: " + fileToCopy);
-	    outputFileLines = new ArrayList<String>(Files.readAllLines(fileToCopy.toPath()));
+	    DEBUG(1, "Reading File: " + fileToRead);
+	    outputFileLines = new ArrayList<String>(Files.readAllLines(fileToRead.toPath()));
 	} catch (Exception e) {
-	    ERR(String.format("Failure when reading from file %s", fileToCopy));
+	    ERR(String.format("Failure when reading from file %s", fileToRead));
 	    ERR(e.toString());
 	    return null;
 	}
@@ -489,18 +504,38 @@ public abstract class Drafter {
      *     makeTimer ()  - > timer
      */
 
+    /**
+     * Constructs a debug optimized timer.
+     * <p>
+     * If debug is not enabled, then the timer will not do anything.
+     *
+     * @return a timer which may or may not be enabled
+     */
     protected Timer makeTimer() {
 	return new Timer(_DEBUG_LEVEL > 0);
     }
-    
+
+    /**
+     * The line number of stdin
+     * @return The line number of stdin
+     */
     public int lineNumber() {
 	return LINE;
     }
 
+    /**
+     * The given token within the current line of stdin
+     * @return The given token within the current line of stdin
+     */
     public int tokenNumber() {
 	return TOKEN;
     }
 
+    /**
+     * Gets the paged line at the given address,
+     * or null if paging is disabled or that line has not yet been paged
+     * @return a paged string, or null if it doesn't exist
+     */   
     public String getPage(int number) throws IllegalArgumentException {
 	if(!_PAGE_ENABLED)
 	    return null;
@@ -514,17 +549,29 @@ public abstract class Drafter {
 
 	return _paged.get(number);
     }
-    
+
+    /**
+     * Is the current line empty?
+     * @return true if the current line is empty
+     */
     public boolean isEmptyLine() {
 	return currentLine() != null && currentLine().length() == 0;
     }
-    
+
+    /**
+     * Returns the current line
+     * @return The current line
+     */
     public String currentLine() {
 	return _currentLine;
     }
 
     ///////////// NEXTBIGINTEGER
 
+    /**
+     * Returns the next BigInteger on this line, if one exists. Otherwise null.
+     * @return The next BigInteger on this line, if it exists. Otherwise null.
+     */
     public BigInteger nextBigInteger() {
         if(hasNextBigInteger()) {
             TOKEN++;
@@ -533,7 +580,11 @@ public abstract class Drafter {
 	
         return null;
     }
-    
+
+    /**
+     * Returns true if another BigInteger exists
+     * @return true if another BigInteger exists
+     */
     public boolean hasNextBigInteger() {
         if(_line != null) {
             return (_line.hasNextBigInteger());
@@ -547,6 +598,10 @@ public abstract class Drafter {
     
     ///////////// NEXTBIGDECIMAL
 
+    /**
+     * Returns the next BigDecimal on this line, if one exists. Otherwise null.
+     * @return The next BigDecimal on this line, if it exists. Otherwise null.
+     */
     public BigDecimal nextBigDecimal() {
         if(hasNextBigDecimal()) {
             TOKEN++;
@@ -555,7 +610,11 @@ public abstract class Drafter {
 	
         return null;
     }
-    
+
+    /**
+     * Returns true if another BigDecimal exists
+     * @return true if another BigDecimal exists
+     */
     public boolean hasNextBigDecimal() {
         if(_line != null) {
             return (_line.hasNextBigDecimal());
@@ -569,6 +628,10 @@ public abstract class Drafter {
     
     ///////////// NEXTDOUBLE
 
+    /**
+     * Returns the next Double on this line, if one exists. Otherwise null.
+     * @return The next Double on this line, if it exists. Otherwise null.
+     */
     public Double nextDouble() {
         if(hasNextDouble()) {
             TOKEN++;
@@ -578,6 +641,10 @@ public abstract class Drafter {
         return null;
     }
 
+    /**
+     * Returns true if another Double exists
+     * @return true if another Double exists
+     */
     public boolean hasNextDouble() {
         if(_line != null) {
             return (_line.hasNextDouble());
@@ -590,7 +657,11 @@ public abstract class Drafter {
     }
     
     ///////////// NEXTLONG
-    
+
+    /**
+     * Returns the next Long on this line, if one exists. Otherwise null.
+     * @return The next Long on this line, if it exists. Otherwise null.
+     */
     public Long nextLong() {
         if(hasNextLong()) {
             TOKEN++;
@@ -600,6 +671,10 @@ public abstract class Drafter {
         return null;
     }
 
+    /**
+     * Returns true if another Long exists
+     * @return true if another Long exists
+     */
     public boolean hasNextLong() {
         if(_line != null) {
             return (_line.hasNextLong());
@@ -612,7 +687,11 @@ public abstract class Drafter {
     }
     
     ///////////// NEXTINT
-    
+
+    /**
+     * Returns the next Integer on this line, if one exists. Otherwise null.
+     * @return The next Integer on this line, if it exists. Otherwise null.
+     */
     public Integer nextInt() {
 	if(hasNextInt()) {
 	    TOKEN++;
@@ -621,7 +700,11 @@ public abstract class Drafter {
 
 	return null;
     }
-    
+
+    /**
+     * Returns true if another Long exists
+     * @return true if another Long exists
+     */    
     public boolean hasNextInt() {
 	if(_line != null) {
 	    return (_line.hasNextInt());
@@ -634,7 +717,11 @@ public abstract class Drafter {
     }
 
     //////////// NEXT
-    
+
+    /**
+     * Returns the next Token on this line, if one exists. Otherwise null.
+     * @return The next Token on this line, if it exists. Otherwise null.
+     */
     public String next() {
 	if(hasNext()) {
 	    TOKEN++;
@@ -643,7 +730,11 @@ public abstract class Drafter {
 
 	return null;
     }
-    
+
+    /**
+     * Returns true if another token exists
+     * @return true if another token exists
+     */    
     private boolean hasNext() {
 	if(_line != null) {
 	    return (_line.hasNext());
@@ -656,7 +747,11 @@ public abstract class Drafter {
     }
 
     //////////// NEXTLINE
-    
+
+    /**
+     * Returns the next Line, if one exists. Otherwise null.
+     * @return The next Line, if it exists. Otherwise null.
+     */
     public String nextLine() {
 	if(hasNextLine()) {
 	    //if there's something left on the input
@@ -701,7 +796,11 @@ public abstract class Drafter {
 
 	return null;
     }
-    
+
+    /**
+     * Returns true if another line exists
+     * @return true if another line exists
+     */
     public boolean hasNextLine() {
 	return checkNextLine();	
     }
@@ -729,7 +828,13 @@ public abstract class Drafter {
      *                    OUTPUT COMMANDS
      *
      *********************************************************/
-    
+
+    /**
+     * The debuglogger associated with this class
+     * <p>
+     * If you wish to use the printing or debug functions of this class outside
+     * of your main class, use this logger
+     */
     public DebugLogger logger = new DebugLogger() {
 	    public void DEBUG(String s) { self.DEBUG(s); }
 	    public void DEBUG(int level, Object s) { self.DEBUG(1, s); }
@@ -775,15 +880,29 @@ public abstract class Drafter {
 	}
     }
 
+    /**
+     * Prints a blank line on debug level one
+     */
     public void DEBUG() {
 	DEBUG("");
     }
 
-    public int ERR(String message) {
-	System.err.println(_DEBUG_COLORIZE(message.toString(), _DEBUG_TO_COLOR(5)));
+    /**
+     * Prints an error message
+     * @param err the error to print
+     * @return the integer 1
+     */
+    public int ERR(String err) {
+	System.err.println(_DEBUG_COLORIZE(err.toString(), _DEBUG_TO_COLOR(5)));
 	return 1;
     }
-    
+
+    /**
+     * Prints a message on a given debug level
+     * 
+     * @param level the given debug level
+     * @param message the message to print
+     */
     public void DEBUG(int level, Object message) {
 	if(_DEBUG_LEVEL == 0)
 	    return;
@@ -793,10 +912,22 @@ public abstract class Drafter {
 	    System.err.println(_DEBUG_COLORIZE(message.toString(), _DEBUG_TO_COLOR(level)));
     }
 
+    /**
+     * Prints a message on debug level 1
+     * 
+     * @param message the message to print
+     */
     public void DEBUG(Object message) {
 	DEBUG(1, message);
     }
 
+    /**
+     * Prints a formatted message on a given debug level
+     *
+     * @param level the level to print on
+     * @param message the message to print
+     * @param args format arguments
+     */
     public void DEBUGF(int level, String message, Object... args) {
 	if(_DEBUG_LEVEL == 0)
 	    return;
@@ -811,6 +942,12 @@ public abstract class Drafter {
 	    System.err.print(_DEBUG_COLORIZE(tmp, _DEBUG_TO_COLOR(level)));
     }
 
+    /**
+     * Prints a formatted message on debug level 1
+     *
+     * @param message the message to print
+     * @param args format arguments
+     */
     public void DEBUGF(String message, Object... args) {
 	DEBUGF(1, message, args);
     }
@@ -818,19 +955,35 @@ public abstract class Drafter {
     private String _DEBUG_COLORIZE(String s, Color c) {
 	return Color.colorize(_COLOR_ENABLED(), s, c);
     }
-    
+
+    /**
+     * Prints an object to stdout
+     * @param a object to print
+     */
     public void print(Object a) {
 	System.out.print(a);
     }
 
-    public void printf(String a, Object... args) {
-	System.out.printf(a, args);
+    /**
+     * Prints a formatted string
+     * @param format format string
+     * @param args format arguments
+     */
+    public void printf(String format, Object... args) {
+	System.out.printf(format, args);
     }
 
+    /**
+     * Prints an object and cr/lf to stdout
+     * @param a object to print
+     */
     public void println(Object a) {
 	System.out.println(a);
     }
 
+    /**
+     * prints a blank line to stdout
+     */
     public void println() {
 	System.out.println();
     }

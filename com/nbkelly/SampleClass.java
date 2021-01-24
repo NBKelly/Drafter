@@ -2,6 +2,11 @@ package com.nbkelly;
 
 /* imports */
 
+/**
+ * Extension of Drafter directed towards a general case.
+ *
+ * For help, see: (TODO) for docs, read the generated javadocs, or (some other thing).
+ */
 /* class */
 public class SampleClass extends Drafter {    
     /* WORKFLOW:
@@ -9,8 +14,8 @@ public class SampleClass extends Drafter {
      *  post-processing can be performed with actOnCommands()
      *  the rest of your work should be based around the solveProblem() function
      */
-
     private FileCommand inputFile;
+
     /* solve problem here */
     @Override public int solveProblem() throws Exception {
 	Timer t = makeTimer();
@@ -45,7 +50,10 @@ public class SampleClass extends Drafter {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
     }
-    
+
+    /**
+     * Creates and runs an instance of your class - do not modify
+     */
     /* main */
     public static void main(String[] argv) {
 	new SampleClass().run(argv);
