@@ -5,7 +5,8 @@ package com.nbkelly;
 /**
  * Extension of Drafter directed towards a general case.
  *
- * For help, see: (TODO) for docs, read the generated javadocs, or (some other thing).
+ * @see <a href="https://nbkelly.github.io/Drafter/com/nbkelly/package-summary.html" target="_top">
+ * here</a> for the up to date online javadocs
  */
 /* class */
 public class SampleClass extends Drafter {    
