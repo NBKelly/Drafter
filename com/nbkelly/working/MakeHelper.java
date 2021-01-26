@@ -481,7 +481,7 @@ public class MakeHelper extends Drafter {
 					    OPTIONAL,
 					    "--additional-imports");
 
-	insertCodeCommand = new FileCommand("Additonal Imports",
+	insertCodeCommand = new FileCommand("Inject Code",
 					    "File from which additional code should be inserted (at the insert-code flag). This is an optioanl argument, and specification for the file can be found in the readme",
 					    OPTIONAL,
 					    "--insert-code");
