@@ -15,23 +15,28 @@ public class SampleClass extends Drafter {
      *  post-processing can be performed with actOnCommands()
      *  the rest of your work should be based around the solveProblem() function
      */
-    private FileCommand inputFile;
-
+    
+    //private FileCommand inputFile;
+    /* insert params */
+    
     /* solve problem here */
     @Override public int solveProblem() throws Exception {
 	Timer t = makeTimer();
-	
-	println("Hello World");
-		
-	DEBUG(1, t.split("Finished Processing"));
 
+        /* insert in solve */
+	println("Hello World");
+	/* end insert in solve */
+	
+	DEBUG(1, t.split("Finished Processing"));
+	
 	return 0;
     }
 
     /* insert block */
-    
+
     /* set commands */
     @Override public Command[] setCommands() {
+        /* insert in set */
 	//inputFile = new FileCommand(/*name =      */ "Input File",
 	//			    /*description=*/ "Auxiliary data for this program",
 	//			    /*mandatory  =*/ true,
@@ -41,15 +46,17 @@ public class SampleClass extends Drafter {
 	//or a memory management/speed thing
 	_PAGE_OPTIONAL = false; //page does not show up as a user input command
 	_PAGE_ENABLED = false;  //page is set to disabled by default
-
+	
 	//return new Command[] {inputFile};
 	return new Command[0];
+	/* end insert in set */
     }
     
     /* act after commands processed */
     @Override public void actOnCommands() {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
+        /* insert in post */
     }
 
     /**
