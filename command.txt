@@ -1,0 +1,2 @@
+//return an empty command
+return new Command[0];
