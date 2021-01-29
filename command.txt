@@ -1,2 +1,5 @@
-//return an empty command
-return new Command[0];
+inputFile = new FileCommand(/*name =      */ "Input File",
+			    /*description=*/ "Auxiliary data for this program",
+			    /*mandatory  =*/ true,
+			    /*[synonyms] =*/ "-f", "--file");
+return new Command[] {inputFile};

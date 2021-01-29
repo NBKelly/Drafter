@@ -1,1 +1,2 @@
-int val = 1;
+private FileCommand inputFile;
+private ArrayList<String> lines;

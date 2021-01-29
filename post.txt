@@ -1,3 +1,1 @@
-/*
- * do something here
- */
+lines = readFileLines(inputFile.value);
