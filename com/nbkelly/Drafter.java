@@ -133,7 +133,7 @@ public abstract class Drafter {
      * but before the solveProblem command begins. Use this section to sanity check
      * your inputs and variables, to assert that files exist, etc.
      */
-    protected abstract int actOnCommands(); 
+    protected abstract int actOnCommands() throws Exception; 
 
     /**
      * Construct a set of command-arguments that the user must enter to run the program.
@@ -848,8 +848,7 @@ public abstract class Drafter {
 	    if(_input.hasNextLine()) {
 		_currentLine = _input.nextLine();
 		if(_PAGE_ENABLED)
-		    _paged.add(_currentLine);
-		println("From Check: '" + _currentLine + "'");		       
+		    _paged.add(_currentLine);		
 		_line = new Scanner(_currentLine);
 	    }
 	    else
