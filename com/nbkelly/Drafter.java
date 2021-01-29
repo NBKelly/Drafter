@@ -826,10 +826,11 @@ public abstract class Drafter {
 	    LINE += 1;
 
 	    //this is our hack for empty lines
-	    if(_line.hasNextLine())
+	    /*if(_line.hasNextLine())
 		return _line.nextLine();
 	    else
-		return _currentLine;
+	    return _currentLine;*/
+	    return "";
 	}
 
 	return null;
