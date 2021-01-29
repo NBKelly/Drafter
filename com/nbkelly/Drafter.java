@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.io.File;
 import java.nio.file.Files;
+import java.io.InputStream;
 
 /*
  * print(x)
@@ -87,6 +88,22 @@ public abstract class Drafter {
     protected int GET_DEBUG_LEVEL() {
 	return _DEBUG_LEVEL;
     }
+
+    private boolean commands_processed = false;
+
+    /**
+     * Sets the input source to a specified inputstream.
+     * <p>
+     * This must be done before commands are post-processed.
+     *
+     * @param in inputstream to use
+     */
+    public void setSource(InputStream in) {
+	if(commands_processed)
+	    throw new IllegalStateException("Must set source before commands are processed in the pipeline :)");
+	  
+	_input = new Scanner(in);
+    }
     
     /** 
      * performs check-once analysis to enable colors 
@@ -116,7 +133,7 @@ public abstract class Drafter {
      * but before the solveProblem command begins. Use this section to sanity check
      * your inputs and variables, to assert that files exist, etc.
      */
-    protected abstract void actOnCommands(); 
+    protected abstract int actOnCommands(); 
 
     /**
      * Construct a set of command-arguments that the user must enter to run the program.
@@ -176,11 +193,32 @@ public abstract class Drafter {
 	//act on the deafult commands
 	actOnDefaultCommands();
 	//act on the user commands
-	actOnCommands();
+	doActOnCommands();
+
+	commands_processed = true;
+	
 	//run the program
 	doSolveProblem();
     }
 
+    private void doActOnCommands() {
+	try {
+            int res = actOnCommands();
+            if(res != 0) {
+		ERR(String.format("actOnCommands failed with exit code " + res));
+                if(_currentLine != null)
+                    ERR("Current Line: >" + _currentLine);
+                FAIL(res);
+            }
+        } catch (Exception e) {
+            ERR(String.format("actOnCommands() failed with exception %s%n%s",
+                              e.toString(), arrayToString(e.getStackTrace(), "\n")));
+            if(_currentLine != null)
+                    ERR("Current Line: >" + _currentLine);
+            FAIL(1);
+        }
+    }
+    
     private void doSolveProblem() {
 	try {
 	    int res = solveProblem();

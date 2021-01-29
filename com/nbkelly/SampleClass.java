@@ -16,7 +16,6 @@ public class SampleClass extends Drafter {
      *  the rest of your work should be based around the solveProblem() function
      */
     
-    //private FileCommand inputFile;
     /* insert params */
     
     /* solve problem here */
@@ -36,27 +35,22 @@ public class SampleClass extends Drafter {
 
     /* set commands */
     @Override public Command[] setCommands() {
-        /* insert in set */
-	//inputFile = new FileCommand(/*name =      */ "Input File",
-	//			    /*description=*/ "Auxiliary data for this program",
-	//			    /*mandatory  =*/ true,
-	//			    /*[synonyms] =*/ "-f", "--file");	
-
 	//do you want paged input to be optional? This is mainly a debugging thing,
 	//or a memory management/speed thing
 	_PAGE_OPTIONAL = false; //page does not show up as a user input command
 	_PAGE_ENABLED = false;  //page is set to disabled by default
 	
-	//return new Command[] {inputFile};
+        /* insert in set */
 	return new Command[0];
 	/* end insert in set */
     }
     
     /* act after commands processed */
-    @Override public void actOnCommands() {
+    @Override public int actOnCommands() {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
         /* insert in post */
+	return 0;
     }
 
     /**

@@ -782,7 +782,7 @@ public class MakeHelper extends Drafter {
     
     
     /* act after commands processed */
-    @Override public void actOnCommands() {
+    @Override public int actOnCommands() {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
 	//use this if you have any complicated pre-processing you want to keep out of the
@@ -794,6 +794,8 @@ public class MakeHelper extends Drafter {
 
 	if(!directoryName.getValue().exists())
 	    directoryName.getValue().mkdirs();
+
+	return 0;
     }
     
     /* main */
