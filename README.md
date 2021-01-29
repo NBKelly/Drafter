@@ -26,12 +26,16 @@ This is primarily targetting towards small repetitive tasks, such as programming
 This will generate a class with name [classname] in package [packagename] in directory [package directory]. Auxiliary files will be generated in [auxiliary-directory] with the package [axuiliary packagename].
 
 The following arguments are enabled by default in a generated program:
-* debug: set the debug level, and selectively enable/disable dibug output
+* debug: set the debug level, and selectively enable/disable debug output
 * help: display help/usage
 * disable-colors: disable colored output
 * ignore-remaining: ignore remaining output
 
 The generated file can be immediately compiled and worked upon.
+
+Additionally, the following may occur:
+* If the insert-code command was used, the inserted code will appear in a block at the subclass level.
+* If the additional-umports command was used, those imports will be inserted at the top of the file.
 
 # TODO
 Show an example of this being used.
