@@ -26,9 +26,7 @@ public class SampleClass extends Drafter {
 	println("Hello World");
 	/* end insert in solve */
 	
-	DEBUG(1, t.split("Finished Processing"));
-	
-	return 0;
+	return DEBUG(1, t.split("Finished Processing"));
     }
 
     /* insert block */

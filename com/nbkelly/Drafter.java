@@ -604,6 +604,22 @@ public abstract class Drafter {
 	return _currentLine;
     }
 
+    /**
+     * Flushes the current line     
+     */
+    public void flushLine() {
+	nextLine();
+    }
+
+    /**
+     * Flushes the current line N times
+     * @param ct number of times to flush
+     */
+    public void flushLine(int ct) {
+	for(int i = 0; i < ct; i++)
+	    flushLine();
+    }
+    
     ///////////// NEXTBIGINTEGER
 
     /**
@@ -874,13 +890,14 @@ public abstract class Drafter {
      * of your main class, use this logger
      */
     public DebugLogger logger = new DebugLogger() {
-	    public void DEBUG(String s) { self.DEBUG(s); }
-	    public void DEBUG(int level, Object s) { self.DEBUG(1, s); }
-	    public void DEBUGF(int level, String s, Object... args) { self.DEBUGF(level, s, args); }
+	    public int DEBUG(String s) { return self.DEBUG(s); }
+	    public int DEBUG(int level, Object s) { return self.DEBUG(1, s); }
+	    public int DEBUGF(int level, String s, Object... args) { return self.DEBUGF(level,
+											s, args); }
 
-	    public void print(Object value) { self.print(value); }
-	    public void printf(String value, Object... args) { self.printf(value, args); }
-	    public void println(Object value) { self.println(value); }
+	    public int print(Object value) { return self.print(value); }
+	    public int printf(String value, Object... args) { return self.printf(value, args); }
+	    public int println(Object value) { return self.println(value); }
 	};	    
     
     //DEBUG (int level, String s)
@@ -920,9 +937,10 @@ public abstract class Drafter {
 
     /**
      * Prints a blank line on debug level one
+     * @return 0
      */
-    public void DEBUG() {
-	DEBUG("");
+    public int DEBUG() {
+	return DEBUG("");
     }
 
     /**
@@ -940,23 +958,27 @@ public abstract class Drafter {
      * 
      * @param level the given debug level
      * @param message the message to print
+     * @return 0
      */
-    public void DEBUG(int level, Object message) {
+    public int DEBUG(int level, Object message) {
 	if(_DEBUG_LEVEL == 0)
-	    return;
+	    return 0;
 
 	//we print anything with a level equal to or below our own
 	if(_DEBUG_LEVEL >= level)
 	    System.err.println(_DEBUG_COLORIZE(message.toString(), _DEBUG_TO_COLOR(level)));
+
+	return 0;
     }
 
     /**
      * Prints a message on debug level 1
      * 
      * @param message the message to print
+     * @return 0
      */
-    public void DEBUG(Object message) {
-	DEBUG(1, message);
+    public int DEBUG(Object message) {
+	return DEBUG(1, message);
     }
 
     /**
@@ -965,19 +987,22 @@ public abstract class Drafter {
      * @param level the level to print on
      * @param message the message to print
      * @param args format arguments
+     * @return 0
      */
-    public void DEBUGF(int level, String message, Object... args) {
+    public int DEBUGF(int level, String message, Object... args) {
 	if(_DEBUG_LEVEL == 0)
-	    return;
+	    return 0;
 
 	if(_DEBUG_LEVEL == 0)
-	    return;
+	    return 0;
 
 	String tmp = String.format(message, args);
 	
 	//we print anything with a level equal to or below our own
 	if(_DEBUG_LEVEL >= level)
 	    System.err.print(_DEBUG_COLORIZE(tmp, _DEBUG_TO_COLOR(level)));
+
+	return 0;
     }
 
     /**
@@ -985,9 +1010,10 @@ public abstract class Drafter {
      *
      * @param message the message to print
      * @param args format arguments
+     * @return 0
      */
-    public void DEBUGF(String message, Object... args) {
-	DEBUGF(1, message, args);
+    public int DEBUGF(String message, Object... args) {
+	return DEBUGF(1, message, args);
     }
 
     private String _DEBUG_COLORIZE(String s, Color c) {
@@ -997,33 +1023,41 @@ public abstract class Drafter {
     /**
      * Prints an object to stdout
      * @param a object to print
+     * @return 0
      */
-    public void print(Object a) {
+    public int print(Object a) {
 	System.out.print(a);
+	return 0;
     }
 
     /**
      * Prints a formatted string
      * @param format format string
      * @param args format arguments
+     * @return 0
      */
-    public void printf(String format, Object... args) {
+    public int printf(String format, Object... args) {
 	System.out.printf(format, args);
+	return 0;
     }
 
     /**
      * Prints an object and cr/lf to stdout
      * @param a object to print
+     * @return 0
      */
-    public void println(Object a) {
+    public int println(Object a) {
 	System.out.println(a);
+	return 0;
     }
 
     /**
      * prints a blank line to stdout
+     * @return 0
      */
-    public void println() {
+    public int println() {
 	System.out.println();
+	return 0;
     }
 
 
