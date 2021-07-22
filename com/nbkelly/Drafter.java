@@ -789,7 +789,7 @@ public abstract class Drafter {
      * Returns true if another token exists
      * @return true if another token exists
      */    
-    private boolean hasNext() {
+    public boolean hasNext() {
 	if(_line != null) {
 	    return (_line.hasNext());
 	}
@@ -802,6 +802,25 @@ public abstract class Drafter {
 
     //////////// NEXTLINE
 
+    /**
+     * Returns the next LINES lines. 
+     * If any of those lines are null, the final element in the list will be null.
+     * @param lines the number of lines to fetch. Must be non-negative.
+     * @return the next LINES lines, terminating on null.
+     */
+    public ArrayList<String> nextLine(int lines) {
+	ArrayList<String> _lines = new ArrayList<String>();
+
+	for(int i = 0; i < lines; i++) {
+	    var line = nextLine();
+	    _lines.add(line);
+	    if(line == null)
+		return _lines;
+	}
+
+	return _lines;
+    }
+    
     /**
      * Returns the next Line, if one exists. Otherwise null.
      * @return The next Line, if it exists. Otherwise null.
