@@ -108,11 +108,11 @@ public abstract class Drafter {
     /** 
      * performs check-once analysis to enable colors 
      * <p>
-     * TODO: try to make sure this works right
+     * @TODO: try to make sure this works right
      *
      * @return true if color is enabled
      */
-    private boolean _COLOR_ENABLED() {
+    protected boolean _COLOR_ENABLED() {
 	if(_COLOR_HARD_DISABLED)
 	    return false;
 
