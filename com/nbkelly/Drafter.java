@@ -1039,13 +1039,55 @@ public abstract class Drafter {
 	return Color.colorize(_COLOR_ENABLED(), s, c);
     }
 
+
+    private String greenify(String s) {
+	if(s == null || s.length() == 0 || !_COLOR_ENABLED())
+	    return s;
+
+	if(!s.contains("\n")) {
+	    if(s.startsWith(">"))
+		return Color.colorize(_COLOR_ENABLED(), s, Color.GREEN);
+	    else
+		return s;
+	}
+
+	String[] split = s.split("\n");
+	StringBuilder res = new StringBuilder();
+
+	for(int i = 0; i < split.length; i++){
+	    res.append(greenify(split[i]));
+	    if(i+1 < split.length)
+		res.append("\n");
+	}
+
+	for(int i = s.length() - 1; i > 0; i--)
+	    if(s.charAt(i) == '\n')
+		res.append("\n");
+	    else
+		break;
+	
+	return res.toString();
+	
+    }
+    private String join(String[] s, String token) {
+	StringBuilder sb = new StringBuilder();
+	for(int i = 0; i < s.length; i++) {
+	    sb.append(s[i]);
+	    if(i+1 < s.length)
+		sb.append(token);
+	}
+
+	return sb.toString();
+    }
+    
     /**
      * Prints an object to stdout
      * @param a object to print
      * @return 0
      */
     public int print(Object a) {
-	System.out.print(a);
+	//String str
+	System.out.print(greenify(a.toString()));
 	return 0;
     }
 
@@ -1056,7 +1098,8 @@ public abstract class Drafter {
      * @return 0
      */
     public int printf(String format, Object... args) {
-	System.out.printf(format, args);
+	String str = String.format(format, args);
+	System.out.print(greenify(str));
 	return 0;
     }
 
@@ -1066,7 +1109,7 @@ public abstract class Drafter {
      * @return 0
      */
     public int println(Object a) {
-	System.out.println(a);
+	System.out.println(greenify(a.toString()));
 	return 0;
     }
 
@@ -1089,7 +1132,7 @@ public abstract class Drafter {
 	    str = str.replaceAll(args[i], args[i+1]);
 	}
 
-	print(str);
+	print(greenify(str));
 
 	return 0;
     }
@@ -1108,7 +1151,7 @@ public abstract class Drafter {
 	    str = str.replaceAll(args[i], args[i+1]);
 	}
 
-	println(str);
+	println(greenify(str));
 
 	return 0;
     }
