@@ -1071,6 +1071,49 @@ public abstract class Drafter {
     }
 
     /**
+     * Performs a series of replacements on a string, then prints it.
+     * <br>
+     * An example would be printr("Chucks's Feed {@literal &} Seed.", "Chuck", "Sneed",
+     * "\\.", " (formerly Chucks).").
+     * <br>
+     * This would present as output "Sneed's Feed {@literal &} Seed (formerly Chucks)."
+     *
+     * @param basis base string
+     * @param args replacements in pairs of strings, [a] -> [b]
+     * @return 0
+     */
+    public int printr(Object basis, String... args) {
+	var str = basis.toString();
+
+	for(int i = 0; i + 1 < args.length; i+= 2) {
+	    str = str.replaceAll(args[i], args[i+1]);
+	}
+
+	print(str);
+
+	return 0;
+    }
+
+    /**
+     * Performs a series of replacements on a string, then prints it.
+     * @see printr
+     * @param basis base string
+     * @param args replacements in pairs of strings, [a] -> [b]
+     * @return 0
+     */
+    public int printrln(Object basis, String... args) {
+	var str = basis.toString();
+
+	for(int i = 0; i + 1 < args.length; i+= 2) {
+	    str = str.replaceAll(args[i], args[i+1]);
+	}
+
+	println(str);
+
+	return 0;
+    }
+
+    /**
      * prints a blank line to stdout
      * @return 0
      */
