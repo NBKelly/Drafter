@@ -1,1 +1,2 @@
-println("inserted Hello World");
+for(var line : lines) //println("inserted Hello World");
+    println(line);
