@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.io.File;
 import java.nio.file.Files;
 import java.io.InputStream;
+import java.io.FileInputStream;
 
 /*
  * print(x)
@@ -104,6 +105,18 @@ public abstract class Drafter {
 	  
 	_input = new Scanner(in);
     }
+
+    
+    /**
+     * Sets the input source to a specified file.
+     * <p>
+     * This must be done before commands are post-processed.
+     *
+     * @param f file to use
+     */
+    public void setSource(File f) throws Exception {
+	setSource(new FileInputStream(f));
+    }
     
     /** 
      * performs check-once analysis to enable colors 
@@ -185,7 +198,8 @@ public abstract class Drafter {
      */
     protected void run(String[] argv) {
 	//add in any commands the user wants to add
-	addCommands(setCommands());
+	var userCommands = setCommands();
+	addCommands(userCommands);
 	//then we set the default commands
 	addCommands(defaultCommands());	
 	//process all of the arguments
