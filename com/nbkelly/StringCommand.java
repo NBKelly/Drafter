@@ -19,6 +19,27 @@ public class StringCommand extends Command {
     public String value;
 
     /**
+     * Create a new IntCommand, including name and description. 
+     *
+     * @param name The name of this command
+     * @param description The description of this command
+     * @param mandatory Is this command mandatory?
+     * @param defaultValue The default value for this command
+     * @param synonyms The set of synonyms that can be used to define this command
+     */
+    public StringCommand(String name, String description,
+			 String defaultValue, boolean mandatory, String... synonyms) {
+	addSynonyms(synonyms).setMandatory(mandatory);
+	this.value = defaultValue;
+	this.takesInput = true;
+	this.type = "String";
+
+	setName(name);
+	setDescription(description);
+    }
+
+    
+    /**
      * Create a new IntCommand. 
      *
      * @param mandatory Is this command mandatory?

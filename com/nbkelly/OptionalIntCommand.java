@@ -30,6 +30,32 @@ public class OptionalIntCommand extends Command {
     public int max;
 
     /**
+     * Create a new OptionalIntCommand, including name and description. 
+     *
+     * @param name The name of this command
+     * @param description The description of this command
+     * @param min The minimum acceptable value for this command
+     * @param max The maximum acceptable value for this command
+     * @param mandatory Is this command mandatory?
+     * @param defaultValue The default value for this command
+     * @param synonyms The set of synonyms that can be used to define this command
+     */
+    public OptionalIntCommand(String name, String description,
+			      int min, int max, boolean mandatory,
+			      int defaultValue, String... synonyms) {
+	addSynonyms(synonyms).setMandatory(mandatory);
+	this.value = defaultValue;
+	this.min = min;
+	this.max = max;
+	this.takesInput = true;
+	this.type = "Optional Integer";
+
+	setName(name);
+	setDescription(description);
+    }
+
+    
+    /**
      * Create a new OptionalIntCommand. 
      *
      * @param min The minimum acceptable value for this command
@@ -38,7 +64,8 @@ public class OptionalIntCommand extends Command {
      * @param defaultValue The default value for this command
      * @param synonyms The set of synonyms that can be used to define this command
      */
-    public OptionalIntCommand(int min, int max, boolean mandatory, int defaultValue, String... synonyms) {
+    public OptionalIntCommand(int min, int max, boolean mandatory,
+			      int defaultValue, String... synonyms) {
 	addSynonyms(synonyms).setMandatory(mandatory);
 	this.value = defaultValue;
 	this.min = min;
