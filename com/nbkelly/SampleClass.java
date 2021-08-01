@@ -43,8 +43,8 @@ public class SampleClass extends Drafter {
 	/* end insert in set */
     }
     
-    /* act after commands processed */
-    @Override public int actOnCommands(Command[] commands) throws Exception {
+    /* act after commands processed - userCommands stores all the commands set in setCommands */
+    @Override public int actOnCommands(Command[] userCommands) throws Exception {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
         /* insert in post */
