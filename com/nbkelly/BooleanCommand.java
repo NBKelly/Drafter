@@ -29,6 +29,23 @@ public class BooleanCommand extends Command {
 	this.value = false;
     }
 
+    /**
+     * Create a new file command
+     *
+     * @param name The name of this command
+     * @param description The description of this command
+     * @param mandatory Is this command mandatory?
+     * @param synonyms The set of synonyms that can be used to define this command
+     */
+    public BooleanCommand(String name, String description, boolean mandatory, String... synonyms) {
+	addSynonyms(synonyms);
+	this.value = false;
+	this.type = "Boolean";
+
+	setName(name);
+	setDescription(description);
+    }
+
     @Override public int match(String[] argv, int index) {
 	String cmd = argv[index];
 	if(matched == 0 && synonyms.contains(cmd)) { //don't match if already matched
