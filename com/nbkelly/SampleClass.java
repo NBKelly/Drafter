@@ -44,7 +44,7 @@ public class SampleClass extends Drafter {
     }
     
     /* act after commands processed */
-    @Override public int actOnCommands() throws Exception {
+    @Override public int actOnCommands(Command[] commands) throws Exception {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
         /* insert in post */

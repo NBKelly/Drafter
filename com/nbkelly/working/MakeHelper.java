@@ -782,7 +782,7 @@ public class MakeHelper extends Drafter {
     
     
     /* act after commands processed */
-    @Override public int actOnCommands() {
+    @Override public int actOnCommands(Command[] userCommands) {
 	//do whatever you want based on the commands you have given
 	//at this stage, they should all be resolved
 	//use this if you have any complicated pre-processing you want to keep out of the

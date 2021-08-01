@@ -146,7 +146,7 @@ public abstract class Drafter {
      * but before the solveProblem command begins. Use this section to sanity check
      * your inputs and variables, to assert that files exist, etc.
      */
-    protected abstract int actOnCommands() throws Exception; 
+    protected abstract int actOnCommands(Command[] userCommands) throws Exception; 
 
     /**
      * Construct a set of command-arguments that the user must enter to run the program.
@@ -207,7 +207,7 @@ public abstract class Drafter {
 	//act on the deafult commands
 	actOnDefaultCommands();
 	//act on the user commands
-	doActOnCommands();
+	doActOnCommands(userCommands);
 
 	commands_processed = true;
 	
@@ -215,9 +215,9 @@ public abstract class Drafter {
 	doSolveProblem();
     }
 
-    private void doActOnCommands() {
+    private void doActOnCommands(Command[] userCommands) {
 	try {
-            int res = actOnCommands();
+            int res = actOnCommands(userCommands);
             if(res != 0) {
 		ERR(String.format("actOnCommands failed with exit code " + res));
                 if(_currentLine != null)
@@ -225,7 +225,7 @@ public abstract class Drafter {
                 FAIL(res);
             }
         } catch (Exception e) {
-            ERR(String.format("actOnCommands() failed with exception %s%n%s",
+            ERR(String.format("actOnCommands(userCommands) failed with exception %s%n%s",
                               e.toString(), arrayToString(e.getStackTrace(), "\n")));
             if(_currentLine != null)
                     ERR("Current Line: >" + _currentLine);
