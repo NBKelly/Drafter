@@ -3,6 +3,16 @@ A tool for rapid workflow prototyping with java programs.
 This is primarily targetting towards small repetitive tasks, such as programming contests and bulk productions.
 
 # Usage
+First, there is a simple syntax that can be used when most of these arguments are irrelevant to you:
+
+`./simple.sh --classname my.package.working.Class --auxiliary-package-name my.other.package.aux`
+
+This can be simplified by replacing `classname` and `auxiliary-package-name` with the shorthands `-c` and `-a`.
+
+for a demonstration of how the tool works, run `test.sh`. This will create a project ready to be run, which takes as input a file, and produces as output the lines of that file. All the contents of the sample project exist in the files out.txt, solve.txt, post.txt, params.txt, Inject.java and command.txt. to learn about these files, run `drafter.sh -h`.
+
+For a more complete script, run the primary tool, drafter.
+
 ./drafter.sh 
 
 [ Mandatory Arguments ]
@@ -35,7 +45,7 @@ The generated file can be immediately compiled and worked upon.
 
 Additionally, the following may occur:
 * If the insert-code command was used, the inserted code will appear in a block at the subclass level.
-* If the additional-umports command was used, those imports will be inserted at the top of the file.
+* If the additional-imports command was used, those imports will be inserted at the top of the file.
 
-# TODO
-Show an example of this being used.
+# JAVADOC
+Javadoc for this can be seen at https://nbkelly.github.io/Drafter/com/nbkelly/Drafter.html
