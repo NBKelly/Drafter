@@ -1136,7 +1136,7 @@ public abstract class Drafter {
      * This would present as output "Sneed's Feed {@literal &} Seed (formerly Chucks)."
      *
      * @param basis base string
-     * @param args replacements in pairs of strings, [a] -> [b]
+     * @param args replacements in pairs of strings, [a] -{@literal >} [b]
      * @return 0
      */
     public int printr(Object basis, String... args) {
@@ -1155,7 +1155,7 @@ public abstract class Drafter {
      * Performs a series of replacements on a string, then prints it.
      * @see printr
      * @param basis base string
-     * @param args replacements in pairs of strings, [a] -> [b]
+     * @param args replacements in pairs of strings, [a] -{@literal >} [b]
      * @return 0
      */
     public int printrln(Object basis, String... args) {
