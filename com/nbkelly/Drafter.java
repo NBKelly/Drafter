@@ -963,11 +963,11 @@ public abstract class Drafter {
 	switch(level) {
 	case 0:
 	case 1:
-	    return Color.RESET;
-	case 2:
 	    return Color.GREEN;
-	case 3:
+	case 2:
 	    return Color.YELLOW;
+	case 3:
+	    return Color.MAGENTA;
 	case 4:
 	    return Color.RED;
 	case 5:
