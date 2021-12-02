@@ -295,6 +295,11 @@ public abstract class Drafter {
 		    continue outer;
 		}
 		else if (new_ind == _ARGUMENT_MATCH_FAILED) {
+		    //we have a partially matched argument
+		    PRINT_ERROR_TEXT("ERROR: An argument was entered, but was missing the associated"
+				     + " parameter.");
+		    System.err.println("Remaining arguments: "
+				       + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
 		    FAIL(_commands, 1, true);
 		}
 	    }
@@ -302,16 +307,20 @@ public abstract class Drafter {
 
 	int unprocessed_args = argv.length - index;
 
-	if(_help.matched())
+	if(_help.matched()) {
 	    FAIL(_commands, 0, false);
+	}
 	if(unprocessed_args != 0 && !_ignore.matched()) {
 	    //we have a number of unprocessed arguments
-	    PRINT_ERROR_TEXT("ERROR: a number of arguments were not matched by any rule (index = " + index + ")");
-	    System.err.println("Unmatched arguments: " + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
+	    PRINT_ERROR_TEXT("ERROR: a number of arguments were not matched by any rule (index = "
+			     + index + ")");
+	    System.err.println("Unmatched arguments: "
+			       + arrayToString(_REMAINING_ARGUMENTS(argv, index)));
 	    FAIL(1);
 	}	
-	if(!arguments_satisfied(_commands))
+	if(!arguments_satisfied(_commands)) {
 	    FAIL(_commands, 1, true);
+	}
 
 	return _REMAINING_ARGUMENTS(argv, index);
     }
