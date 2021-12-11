@@ -131,7 +131,7 @@ public abstract class Drafter {
 
 	else if (!_COLOR_CHECKED) {
 	    //this supposedly only works on linux - no clue what the fuck to do on windows
-	    //if(System.console() != null && System.getenv().get("TERM") != null)
+	    if(System.console() != null && System.getenv().get("TERM") != null)
 		_COLOR_ENABLED = true;
 	    _COLOR_CHECKED = true;
 	}
